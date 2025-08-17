@@ -1,0 +1,457 @@
+/* Futuristic Admin Theme - Advanced GTA 8 Style */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Custom Properties */
+:root {
+    --neon-cyan: #00f5ff;
+    --neon-blue: #0066ff;
+    --neon-purple: #8a2be2;
+    --neon-pink: #ff0080;
+    --neon-green: #00ff41;
+    --neon-orange: #ff6b35;
+    --dark-bg: #0a0a0f;
+    --darker-bg: #050508;
+    --glass-bg: rgba(10, 10, 15, 0.8);
+    --border-glow: rgba(0, 245, 255, 0.3);
+}
+
+/* Futuristic Typography */
+.font-futuristic {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+}
+
+.font-cyber {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.font-tech {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* Advanced Button System */
+.btn-futuristic {
+    position: relative;
+    padding: 12px 32px;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 
+        0 0 20px rgba(0, 245, 255, 0.2),
+        inset 0 0 20px rgba(0, 245, 255, 0.1);
+}
+
+.btn-futuristic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.4), transparent);
+    transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-futuristic::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.btn-futuristic:hover::before {
+    left: 100%;
+}
+
+.btn-futuristic:hover::after {
+    opacity: 1;
+}
+
+.btn-futuristic:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 10px 30px rgba(0, 245, 255, 0.4),
+        0 0 40px rgba(0, 245, 255, 0.3),
+        inset 0 0 30px rgba(0, 245, 255, 0.2);
+    border-color: var(--neon-cyan);
+}
+
+.btn-futuristic:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Button Variants */
+.btn-primary {
+    background: linear-gradient(135deg, #00f5ff, #0066ff);
+    border-color: #00f5ff;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #00d4dd, #0052cc);
+    box-shadow: 
+        0 10px 30px rgba(0, 245, 255, 0.5),
+        0 0 40px rgba(0, 245, 255, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #8a2be2, #ff0080);
+    border-color: #8a2be2;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #7a1bd2, #e60073);
+    box-shadow: 
+        0 10px 30px rgba(138, 43, 226, 0.5),
+        0 0 40px rgba(255, 0, 128, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #00ff41, #00d4aa);
+    border-color: #00ff41;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #00e638, #00b894);
+    box-shadow: 
+        0 10px 30px rgba(0, 255, 65, 0.5),
+        0 0 40px rgba(0, 212, 170, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff6b35, #ff0080);
+    border-color: #ff6b35;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #e65a2e, #e60073);
+    box-shadow: 
+        0 10px 30px rgba(255, 107, 53, 0.5),
+        0 0 40px rgba(255, 0, 128, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffd700, #ff6b35);
+    border-color: #ffd700;
+    color: #000;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e6c200, #e65a2e);
+    box-shadow: 
+        0 10px 30px rgba(255, 215, 0, 0.5),
+        0 0 40px rgba(255, 107, 53, 0.4);
+}
+
+/* Icon Buttons */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+}
+
+.btn-icon.btn-small {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+}
+
+.btn-icon.btn-large {
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+}
+
+/* Floating Action Buttons */
+.btn-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00f5ff, #0066ff);
+    border: none;
+    box-shadow: 
+        0 8px 25px rgba(0, 245, 255, 0.4),
+        0 0 30px rgba(0, 245, 255, 0.3);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-float:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 
+        0 15px 35px rgba(0, 245, 255, 0.6),
+        0 0 50px rgba(0, 245, 255, 0.4);
+}
+
+/* Advanced Form Elements */
+.form-futuristic {
+    background: var(--glass-bg);
+    border: 2px solid var(--border-glow);
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.input-futuristic {
+    background: rgba(10, 10, 15, 0.8);
+    border: 2px solid var(--border-glow);
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 12px 16px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.input-futuristic:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    box-shadow: 
+        0 0 20px rgba(0, 245, 255, 0.3),
+        inset 0 0 10px rgba(0, 245, 255, 0.1);
+    background: rgba(10, 10, 15, 0.9);
+}
+
+/* Advanced Cards */
+.card-futuristic {
+    background: var(--glass-bg);
+    border: 2px solid var(--border-glow);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+}
+
+.card-futuristic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue), var(--neon-purple));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.card-futuristic:hover::before {
+    opacity: 1;
+}
+
+.card-futuristic:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(0, 245, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: var(--neon-cyan);
+}
+
+/* Advanced Tables */
+.table-futuristic {
+    background: var(--glass-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--border-glow);
+}
+
+.table-futuristic th {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(0, 102, 255, 0.1));
+    color: var(--neon-cyan);
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 20px 16px;
+    border-bottom: 2px solid var(--border-glow);
+}
+
+.table-futuristic td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.table-futuristic tr:hover td {
+    background: rgba(0, 245, 255, 0.05);
+    transform: scale(1.01);
+}
+
+/* Advanced Navigation */
+.nav-futuristic {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid var(--border-glow);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-link-futuristic {
+    color: #ffffff;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 24px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link-futuristic::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--neon-cyan);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link-futuristic:hover::before {
+    width: 100%;
+}
+
+.nav-link-futuristic:hover {
+    color: var(--neon-cyan);
+    background: rgba(0, 245, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Advanced Animations */
+@keyframes neonPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes neonGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(0, 245, 255, 0.6), 0 0 60px rgba(0, 245, 255, 0.4);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Animation Classes */
+.animate-neon-pulse {
+    animation: neonPulse 2s ease-in-out infinite;
+}
+
+.animate-neon-glow {
+    animation: neonGlow 3s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-rotate {
+    animation: rotate 10s linear infinite;
+}
+
+/* Advanced Loading States */
+.loading-futuristic {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-futuristic::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .btn-futuristic {
+        padding: 10px 24px;
+        font-size: 12px;
+    }
+    
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .card-futuristic {
+        border-radius: 12px;
+    }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dark-bg: #000000;
+        --darker-bg: #000000;
+        --glass-bg: rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .btn-futuristic {
+        border-width: 3px;
+    }
+    
+    .input-futuristic {
+        border-width: 3px;
+    }
+}
