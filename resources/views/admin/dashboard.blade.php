@@ -300,12 +300,12 @@
         const { gsap } = window;
         if(!gsap) return;
 
-        // reveal cards
+        // reveal cards - keep original timing for top sections
         gsap.utils.toArray('.reveal').forEach((el, i) => {
             gsap.fromTo(el, { y: 12, autoAlpha: 0 }, { y:0, autoAlpha:1, duration:0.7, delay: i * 0.08, ease: 'power3.out' });
         });
 
-        // animate numbers
+        // animate numbers - keep original
         document.querySelectorAll('.stat-count').forEach(el => {
             const target = parseInt(el.dataset.target || 0, 10);
             gsap.fromTo(el, { innerText: 0 }, {
@@ -317,36 +317,115 @@
             });
         });
 
-        // Management section animations
-        gsap.fromTo('.bg-gradient-to-br', 
-            { y: 30, opacity: 0, scale: 0.95 }, 
-            { 
-                y: 0, 
-                opacity: 1, 
-                scale: 1, 
-                duration: 0.8, 
-                stagger: 0.1, 
-                delay: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: '.bg-gradient-to-br',
-                    start: "top 80%",
-                    end: "bottom 20%",
-                    toggleActions: "play none none reverse"
+        // IMPROVED Management section animations - Much faster and more responsive
+        // Wait a bit for DOM to be fully ready
+        setTimeout(() => {
+            // Find management sections by looking for the specific structure
+            const contentManagementSection = document.querySelector('h3[class*="text-2xl"][class*="font-bold"]');
+            const managementSections = [];
+            
+            if (contentManagementSection) {
+                const section = contentManagementSection.closest('div[class*="bg-white"]');
+                if (section) managementSections.push(section);
+            }
+            
+            // Also find system management section
+            const systemSection = document.querySelector('h3 i.fa-server');
+            if (systemSection) {
+                const section = systemSection.closest('div[class*="bg-white"]');
+                if (section && !managementSections.includes(section)) {
+                    managementSections.push(section);
                 }
             }
-        );
-
-        // Hover effects for management cards
-        document.querySelectorAll('.bg-gradient-to-br').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                gsap.to(card, { scale: 1.02, duration: 0.3, ease: "power2.out" });
-            });
             
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, { scale: 1, duration: 0.3, ease: "power2.out" });
+            managementSections.forEach((section, index) => {
+                if (!section) return;
+                
+                const cards = section.querySelectorAll('div[class*="bg-gradient-to-br"]');
+                
+                if (section) {
+                    gsap.fromTo(section, 
+                        { y: 20, opacity: 0 }, 
+                        { 
+                            y: 0, 
+                            opacity: 1, 
+                            duration: 0.4,
+                            delay: 0.6 + (index * 0.1),
+                            ease: "power2.out"
+                        }
+                    );
+                }
+
+                // Animate cards within each section faster
+                if (cards.length > 0) {
+                    gsap.fromTo(cards, 
+                        { y: 15, opacity: 0, scale: 0.98 }, 
+                        { 
+                            y: 0, 
+                            opacity: 1, 
+                            scale: 1, 
+                            duration: 0.5,
+                            stagger: 0.06,
+                            delay: 0.7 + (index * 0.1),
+                            ease: "power2.out"
+                        }
+                    );
+                }
             });
-        });
+        }, 100);
+
+        // Enhanced hover effects for management cards - More responsive
+        // Use a more reliable selector
+        setTimeout(() => {
+            const managementCards = document.querySelectorAll('div[class*="bg-gradient-to-br"][class*="border"][class*="rounded-xl"]');
+            
+            managementCards.forEach(card => {
+                // Add a subtle glow effect on hover
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { 
+                        scale: 1.03, 
+                        duration: 0.2,
+                        ease: "power2.out"
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { 
+                        scale: 1, 
+                        duration: 0.2,
+                        ease: "power2.out"
+                    });
+                });
+
+                // Add click animation for better feedback
+                card.addEventListener('mousedown', () => {
+                    gsap.to(card, { scale: 0.98, duration: 0.1 });
+                });
+                
+                card.addEventListener('mouseup', () => {
+                    gsap.to(card, { scale: 1.03, duration: 0.1 });
+                });
+            });
+
+            // Add staggered button animations within cards
+            managementCards.forEach((card, cardIndex) => {
+                const buttons = card.querySelectorAll('a');
+                
+                if (buttons.length > 0) {
+                    gsap.fromTo(buttons,
+                        { opacity: 0, x: -10 },
+                        {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.3,
+                            stagger: 0.1,
+                            delay: 1 + (cardIndex * 0.05),
+                            ease: "power2.out"
+                        }
+                    );
+                }
+            });
+        }, 150);
     });
 </script>
 @endpush
