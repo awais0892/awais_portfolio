@@ -27,7 +27,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('ScrollTrigger not loaded properly');
         return;
     }
-    
-    console.log('GSAP and plugins loaded successfully');
 });
 

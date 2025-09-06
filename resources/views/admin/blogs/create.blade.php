@@ -91,24 +91,33 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                         <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Featured Image</label>
-                        <div class="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-cyan-400/50 transition-colors duration-300">
-                            <input type="file" name="featured_image" accept="image/*" class="hidden" id="featured_image" onchange="previewImage(this)">
-                            <label for="featured_image" class="cursor-pointer">
-                                <div class="space-y-4">
-                                    <div class="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto">
-                                        <i class="fas fa-image text-cyan-300 text-xl"></i>
+                        
+                        <!-- Cloudinary Upload Component -->
+                        <div id="cloudinary-upload-container">
+                            @include('components.file-upload', [
+                                'type' => 'image',
+                                'folder' => 'portfolio/blog-images',
+                                'title' => 'Upload Featured Image',
+                                'description' => 'Upload a featured image for your blog post'
+                            ])
                                     </div>
-                                    <div>
-                                        <p class="text-cyan-300 font-semibold">Click to upload image</p>
-                                        <p class="text-cyan-300/50 text-sm">PNG, JPG, GIF, WEBP up to 2MB</p>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
+                        
+                        <!-- Hidden input to store Cloudinary URL -->
+                        <input type="hidden" name="featured_image_url" id="featured_image_url" value="{{ old('featured_image_url') }}">
+                        
+                        <!-- Image Preview -->
                         <div id="imagePreview" class="hidden mt-4">
+                            <div class="relative">
                             <img id="previewImg" src="" alt="Preview" class="w-full h-48 object-cover rounded-xl">
+                                <button type="button" onclick="removeImage()" 
+                                        class="absolute top-2 right-2 bg-red-500/80 hover:bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-cyan-300/70 text-sm mt-2">Click the X to remove this image</p>
                         </div>
-                        @error('featured_image')
+                        
+                        @error('featured_image_url')
                             <p class="text-red-400 text-sm mt-2">{{ $message }}</p>
                         @enderror
                     </div>
@@ -272,14 +281,40 @@
         );
     }
 
-    function previewImage(input) {
+    // Cloudinary upload integration
+    document.addEventListener('DOMContentLoaded', function() {
+        // Listen for file upload events from the Cloudinary component
+        const uploadContainer = document.getElementById('cloudinary-upload-container');
+        if (uploadContainer) {
+            uploadContainer.addEventListener('fileUploaded', function(event) {
+                const fileData = event.detail;
+                showImagePreview(fileData.secure_url);
+                document.getElementById('featured_image_url').value = fileData.secure_url;
+                
+                // Hide the upload component and show preview
+                const uploadComponent = uploadContainer.querySelector('.file-upload-component');
+                if (uploadComponent) {
+                    uploadComponent.style.display = 'none';
+                }
+            });
+        }
+        
+        // Show existing image if editing
+        const existingImageUrl = document.getElementById('featured_image_url').value;
+        if (existingImageUrl) {
+            showImagePreview(existingImageUrl);
+            const uploadComponent = uploadContainer.querySelector('.file-upload-component');
+            if (uploadComponent) {
+                uploadComponent.style.display = 'none';
+            }
+        }
+    });
+
+    function showImagePreview(imageUrl) {
         const preview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
         
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
+        previewImg.src = imageUrl;
                 preview.classList.remove('hidden');
                 
                 // Animate preview appearance
@@ -287,10 +322,33 @@
                     { scale: 0.8, opacity: 0 }, 
                     { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
                 );
-            };
-            reader.readAsDataURL(input.files[0]);
-        } else {
+    }
+
+    function removeImage() {
+        const preview = document.getElementById('imagePreview');
+        const uploadContainer = document.getElementById('cloudinary-upload-container');
+        const uploadComponent = uploadContainer.querySelector('.file-upload-component');
+        
+        // Clear the hidden input
+        document.getElementById('featured_image_url').value = '';
+        
+        // Hide preview
             preview.classList.add('hidden');
+        
+        // Show upload component again
+        if (uploadComponent) {
+            uploadComponent.style.display = 'block';
+        }
+        
+        // Clear any uploaded files list
+        const filesList = uploadContainer.querySelector('#files-list-image');
+        if (filesList) {
+            filesList.innerHTML = '';
+        }
+        
+        const uploadedFiles = uploadContainer.querySelector('#uploaded-files-image');
+        if (uploadedFiles) {
+            uploadedFiles.classList.add('hidden');
         }
     }
 </script>

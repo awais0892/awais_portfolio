@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\CommentManagementController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -57,5 +58,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('blogs/{blog}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blogs.toggle-status');
         Route::post('blogs/bulk-action', [BlogController::class, 'bulkAction'])->name('blogs.bulk-action');
         Route::post('blogs/{blog}/duplicate', [BlogController::class, 'duplicate'])->name('blogs.duplicate');
-    });
+        
+        // Comments & Ratings Management
+        Route::get('comments', [CommentManagementController::class, 'index'])->name('comments.index');
+        Route::post('comments/{comment}/approve', [CommentManagementController::class, 'approveComment'])->name('comments.approve');
+        Route::post('comments/{comment}/reject', [CommentManagementController::class, 'rejectComment'])->name('comments.reject');
+        Route::delete('comments/{comment}', [CommentManagementController::class, 'deleteComment'])->name('comments.delete');
+        Route::post('ratings/{rating}/approve', [CommentManagementController::class, 'approveRating'])->name('ratings.approve');
+        Route::post('ratings/{rating}/reject', [CommentManagementController::class, 'rejectRating'])->name('ratings.reject');
+        Route::delete('ratings/{rating}', [CommentManagementController::class, 'deleteRating'])->name('ratings.delete');
+        Route::get('comments/stats', [CommentManagementController::class, 'stats'])->name('comments.stats');
+    
+    // File Manager
+    Route::get('file-manager', function () {
+        return view('admin.file-manager');
+    })->name('file-manager');
+});
 });

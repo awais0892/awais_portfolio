@@ -160,9 +160,17 @@
                                     <div class="flex items-center space-x-4">
                                         <div class="w-16 h-12 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl overflow-hidden">
                                             @if($blog->featured_image)
+                                                @if(str_starts_with($blog->featured_image, 'http'))
+                                                    {{-- Cloudinary URL --}}
+                                                    <img src="{{ $blog->featured_image }}" 
+                                                         alt="{{ $blog->title }}" 
+                                                         class="w-full h-full object-cover">
+                                                @else
+                                                    {{-- Local storage URL --}}
                                                 <img src="{{ asset('storage/' . $blog->featured_image) }}" 
                                                      alt="{{ $blog->title }}" 
                                                      class="w-full h-full object-cover">
+                                                @endif
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center">
                                                     <i class="fas fa-image text-cyan-300/50"></i>

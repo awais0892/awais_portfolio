@@ -55,7 +55,7 @@ class BlogController extends Controller
             'slug' => 'nullable|string|max:255|unique:blogs,slug',
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'featured_image_url' => 'nullable|url',
             'status' => 'required|in:draft,published,archived',
             'author' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
@@ -68,12 +68,9 @@ class BlogController extends Controller
 
         $data = $request->except(['featured_image', 'tags']);
         
-        // Handle featured image
-        if ($request->hasFile('featured_image')) {
-            $file = $request->file('featured_image');
-            $filename = time() . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('blogs', $filename, 'public');
-            $data['featured_image'] = $path;
+        // Handle featured image URL from Cloudinary
+        if ($request->filled('featured_image_url')) {
+            $data['featured_image'] = $request->featured_image_url;
         }
 
         // Handle tags
@@ -110,7 +107,7 @@ class BlogController extends Controller
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('blogs')->ignore($blog->id)],
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'featured_image_url' => 'nullable|url',
             'status' => 'required|in:draft,published,archived',
             'author' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
@@ -123,17 +120,12 @@ class BlogController extends Controller
 
         $data = $request->except(['featured_image', 'tags']);
         
-        // Handle featured image
-        if ($request->hasFile('featured_image')) {
-            // Delete old image if exists
-            if ($blog->featured_image && Storage::disk('public')->exists($blog->featured_image)) {
-                Storage::disk('public')->delete($blog->featured_image);
-            }
-
-            $file = $request->file('featured_image');
-            $filename = time() . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('blogs', $filename, 'public');
-            $data['featured_image'] = $path;
+        // Handle featured image URL from Cloudinary
+        if ($request->filled('featured_image_url')) {
+            $data['featured_image'] = $request->featured_image_url;
+        } elseif ($request->has('featured_image_url') && empty($request->featured_image_url)) {
+            // If the field is present but empty, remove the image
+            $data['featured_image'] = null;
         }
 
         // Handle tags
@@ -154,11 +146,10 @@ class BlogController extends Controller
 
     public function destroy(Blog $blog)
     {
-        // Delete featured image if exists
-        if ($blog->featured_image && Storage::disk('public')->exists($blog->featured_image)) {
-            Storage::disk('public')->delete($blog->featured_image);
-        }
-
+        // Note: We don't delete Cloudinary images automatically
+        // as they might be used by other blog posts or content
+        // Images can be managed through the Cloudinary dashboard
+        
         $blog->delete();
 
         return redirect()->route('admin.blogs.index')

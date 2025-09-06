@@ -1,5 +1,3 @@
-// Advanced Futuristic Admin Animations - GTA 8 Style
-// GSAP-powered animations with futuristic effects
 
 class FuturisticAdminUI {
     constructor() {
@@ -14,10 +12,7 @@ class FuturisticAdminUI {
     }
 
     setupGSAP() {
-        // Register GSAP plugins
         gsap.registerPlugin(ScrollTrigger, TextPlugin, MorphSVGPlugin);
-        
-        // Set default ease
         gsap.defaults({ ease: "power2.out" });
     }
 

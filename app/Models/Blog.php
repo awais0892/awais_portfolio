@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -99,6 +100,11 @@ class Blog extends Model
     public function getFeaturedImageUrlAttribute()
     {
         if ($this->featured_image) {
+            // Check if it's a Cloudinary URL (starts with http)
+            if (str_starts_with($this->featured_image, 'http')) {
+                return $this->featured_image;
+            }
+            // Otherwise, it's a local storage path
             return asset('storage/' . $this->featured_image);
         }
         return asset('images/default-blog-image.jpg');
@@ -245,5 +251,66 @@ class Blog extends Model
             ->orderBy('published_at', 'desc')
             ->limit($limit)
             ->get();
+    }
+
+    // Relationships
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function approvedComments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable')->approved()->topLevel();
+    }
+
+    public function ratings(): MorphMany
+    {
+        return $this->morphMany(Rating::class, 'rateable');
+    }
+
+    public function approvedRatings(): MorphMany
+    {
+        return $this->morphMany(Rating::class, 'rateable')->approved();
+    }
+
+    // Rating methods
+    public function getAverageRatingAttribute()
+    {
+        $ratings = $this->approvedRatings;
+        if ($ratings->count() === 0) {
+            return 0;
+        }
+        return round($ratings->avg('rating'), 1);
+    }
+
+    public function getTotalRatingsAttribute()
+    {
+        return $this->approvedRatings->count();
+    }
+
+    public function getRatingDistributionAttribute()
+    {
+        $distribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $distribution[$i] = $this->approvedRatings->where('rating', $i)->count();
+        }
+        return $distribution;
+    }
+
+    public function getStarsHtmlAttribute()
+    {
+        $average = $this->average_rating;
+        $stars = '';
+        for ($i = 1; $i <= 5; $i++) {
+            if ($i <= floor($average)) {
+                $stars .= '<i class="fas fa-star text-yellow-400"></i>';
+            } elseif ($i - 0.5 <= $average) {
+                $stars .= '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+            } else {
+                $stars .= '<i class="far fa-star text-gray-400"></i>';
+            }
+        }
+        return $stars;
     }
 }
