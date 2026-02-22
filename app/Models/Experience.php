@@ -12,8 +12,18 @@ class Experience extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'company', 'location', 'start_date', 'end_date',
-        'is_current', 'description', 'achievements', 'technologies', 'order', 'is_active'
+        'title',
+        'company',
+        'location',
+        'start_date',
+        'end_date',
+        'is_current',
+        'description',
+        'achievements',
+        'technologies',
+        'order',
+        'is_active',
+        'company_logo'
     ];
 
     protected $casts = [
@@ -39,7 +49,7 @@ class Experience extends Model
     {
         $start = $this->start_date;
         $end = $this->is_current ? now() : $this->end_date;
-        
+
         return $start->format('M Y') . ' - ' . ($this->is_current ? 'Present' : $end->format('M Y'));
     }
 

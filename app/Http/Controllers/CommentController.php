@@ -38,7 +38,7 @@ class CommentController extends Controller
             'commentable_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'content' => 'required|string|min:3|max:2000',
+            'content' => 'required|string|max:2000',
             'parent_id' => 'nullable|integer|exists:comments,id'
         ]);
 
@@ -133,13 +133,15 @@ class CommentController extends Controller
             ->where('commentable_id', $request->commentable_id)
             ->approved()
             ->topLevel()
-            ->with(['replies' => function($query) {
-                $query->approved()->orderBy('created_at', 'asc');
-            }])
+            ->with([
+                'replies' => function ($query) {
+                    $query->approved()->orderBy('created_at', 'asc');
+                }
+            ])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $commentsData = $comments->map(function($comment) {
+        $commentsData = $comments->map(function ($comment) {
             return [
                 'id' => $comment->id,
                 'name' => $comment->name,
@@ -147,7 +149,7 @@ class CommentController extends Controller
                 'formatted_date' => $comment->formatted_date,
                 'initials' => $comment->initials,
                 'parent_id' => $comment->parent_id,
-                'replies' => $comment->replies->map(function($reply) {
+                'replies' => $comment->replies->map(function ($reply) {
                     return [
                         'id' => $reply->id,
                         'name' => $reply->name,

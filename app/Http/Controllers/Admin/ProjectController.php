@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class ProjectController extends Controller
 {
@@ -18,10 +17,10 @@ class ProjectController extends Controller
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('long_description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('long_description', 'like', "%{$search}%");
             });
         }
 
@@ -38,13 +37,13 @@ class ProjectController extends Controller
         // Sorting
         $sortField = $request->get('sort_field', 'id');
         $sortDirection = $request->get('sort_direction', 'asc');
-        
+
         // Validate sort field
         $allowedSortFields = ['id', 'title', 'featured', 'is_active', 'order', 'created_at'];
         if (!in_array($sortField, $allowedSortFields)) {
             $sortField = 'id';
         }
-        
+
         $query->orderBy($sortField, $sortDirection);
 
         // Pagination
@@ -91,15 +90,7 @@ class ProjectController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = 'projects/' . $imageName;
-            
-            // Resize and save image
-            $img = Image::make($image)->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            
-            Storage::disk('public')->put($imagePath, $img->encode());
+            $imagePath = $image->storeAs('projects', $imageName, 'public');
             $validated['image'] = $imagePath;
         }
 
@@ -148,14 +139,7 @@ class ProjectController extends Controller
 
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = 'projects/' . $imageName;
-            
-            $img = Image::make($image)->resize(800, 600, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            
-            Storage::disk('public')->put($imagePath, $img->encode());
+            $imagePath = $image->storeAs('projects', $imageName, 'public');
             $validated['image'] = $imagePath;
         }
 
