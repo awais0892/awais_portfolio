@@ -50,7 +50,7 @@
             </div>
 
             <!-- Filters -->
-            <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
+            <div class="relative z-20 overflow-visible backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
                 <form method="GET" action="{{ route('admin.skills.index') }}" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div>
@@ -111,7 +111,7 @@
             </div>
 
             <!-- Bulk Actions -->
-            <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
+            <div class="relative z-10 backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
                 <form id="bulkActionForm" method="POST" action="{{ route('admin.skills.bulk-action') }}" class="space-y-4">
                     @csrf
                     <div

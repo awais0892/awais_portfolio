@@ -32,7 +32,7 @@
         </div>
 
         <!-- Form -->
-        <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
+        <div class="relative z-20 overflow-visible backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
             <form method="POST" action="{{ route('admin.skills.update', $skill) }}" class="space-y-8">
                 @csrf
                 @method('PUT')

@@ -388,7 +388,13 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
             backdrop-filter: blur(15px);
             margin-top: 5px !important;
-            z-index: 9999 !important;
+            z-index: 10010 !important;
+        }
+
+        /* Ensure Choices container itself sits above nearby glass sections */
+        .choices {
+            position: relative !important;
+            z-index: 10005 !important;
         }
 
         .choices__list--dropdown .choices__item--selectable {
