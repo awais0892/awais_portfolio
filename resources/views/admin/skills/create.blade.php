@@ -50,7 +50,7 @@
                     <div>
                         <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Category *</label>
                         <select name="category" required
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="js-choice w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
                             <option value="">Select a category...</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat }}" {{ old('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>

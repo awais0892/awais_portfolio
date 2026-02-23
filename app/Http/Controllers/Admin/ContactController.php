@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use App\Mail\ContactNotification;
+use App\Mail\ContactThankYou;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -38,10 +39,8 @@ class ContactController extends Controller
                 'ip_address' => $request->ip(),
             ]);
 
-            // Send email notification (optional) if MAIL_TO configured
-            if (env('MAIL_TO')) {
-                $this->sendNotificationEmail($contact);
-            }
+            // Send emails
+            $this->sendEmails($contact);
 
             return response()->json([
                 'success' => true,
@@ -58,7 +57,7 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $query = Contact::query();
-        
+
         // Filter by status if provided
         if ($request->has('status') && $request->status !== '') {
             if ($request->status === 'unread') {
@@ -67,20 +66,20 @@ class ContactController extends Controller
                 $query->where('status', 'read');
             }
         }
-        
+
         // Search functionality
         if ($request->has('search') && $request->search !== '') {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('subject', 'like', "%{$search}%")
-                  ->orWhere('message', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%")
+                    ->orWhere('message', 'like', "%{$search}%");
             });
         }
-        
+
         $contacts = $query->latest()->paginate(15);
-        
+
         return view('admin.contacts.index', compact('contacts'));
     }
 
@@ -90,7 +89,7 @@ class ContactController extends Controller
         if ($contact->status === 'unread') {
             $contact->update(['status' => 'read']);
         }
-        
+
         return view('admin.contacts.show', compact('contact'));
     }
 
@@ -99,9 +98,9 @@ class ContactController extends Controller
         $request->validate([
             'status' => 'required|in:read,unread,replied'
         ]);
-        
+
         $contact->update(['status' => $request->status]);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Contact status updated successfully'
@@ -111,7 +110,7 @@ class ContactController extends Controller
     public function destroy(Contact $contact)
     {
         $contact->delete();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Contact message deleted successfully'
@@ -124,25 +123,32 @@ class ContactController extends Controller
             'ids' => 'required|array',
             'ids.*' => 'exists:contacts,id'
         ]);
-        
+
         Contact::whereIn('id', $request->ids)->delete();
-        
+
         return response()->json([
             'success' => true,
             'message' => count($request->ids) . ' contact messages deleted successfully'
         ]);
     }
 
-    private function sendNotificationEmail($contact)
+    private function sendEmails($contact)
     {
+        // 1. Send notification to ADMIN
         try {
-            $to = env('MAIL_TO');
+            $to = env('MAIL_TO') ?? config('mail.from.address');
             if ($to) {
                 Mail::to($to)->send(new ContactNotification($contact));
             }
         } catch (\Exception $e) {
-            // Log error but don't fail the request
             \Log::error('Failed to send contact notification: ' . $e->getMessage());
+        }
+
+        // 2. Send thank you to VISITOR
+        try {
+            Mail::to($contact->email)->send(new ContactThankYou($contact));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send thank you email: ' . $e->getMessage());
         }
     }
 }

@@ -63,7 +63,7 @@
                             <label
                                 class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Category</label>
                             <select name="category"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">All Categories</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}
@@ -75,7 +75,7 @@
                             <label
                                 class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Status</label>
                             <select name="status"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">All Statuses</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
@@ -86,7 +86,7 @@
                             <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Sort
                                 By</label>
                             <select name="sort_by"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="order" {{ request('sort_by') == 'order' ? 'selected' : '' }}>Order</option>
                                 <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Name</option>
                                 <option value="proficiency" {{ request('sort_by') == 'proficiency' ? 'selected' : '' }}>
@@ -118,7 +118,7 @@
                         class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                         <div class="flex items-center space-x-4">
                             <select id="bulkAction" name="action"
-                                class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">Bulk Actions</option>
                                 <option value="activate">Activate Selected</option>
                                 <option value="deactivate">Deactivate Selected</option>

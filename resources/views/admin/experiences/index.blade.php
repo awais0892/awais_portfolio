@@ -63,7 +63,7 @@
                             <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Current
                                 Job</label>
                             <select name="current"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">All</option>
                                 <option value="1" {{ request('current') == '1' ? 'selected' : '' }}>Current</option>
                                 <option value="0" {{ request('current') == '0' ? 'selected' : '' }}>Past</option>
@@ -73,7 +73,7 @@
                             <label
                                 class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Status</label>
                             <select name="status"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">All Statuses</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
@@ -84,7 +84,7 @@
                             <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Sort
                                 By</label>
                             <select name="sort_by"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="order" {{ request('sort_by') == 'order' ? 'selected' : '' }}>Order</option>
                                 <option value="start_date" {{ request('sort_by') == 'start_date' ? 'selected' : '' }}>Start
                                     Date</option>
@@ -117,7 +117,7 @@
                         class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                         <div class="flex items-center space-x-4">
                             <select id="bulkAction" name="action"
-                                class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
+                                class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
                                 <option value="">Bulk Actions</option>
                                 <option value="activate">Activate Selected</option>
                                 <option value="deactivate">Deactivate Selected</option>

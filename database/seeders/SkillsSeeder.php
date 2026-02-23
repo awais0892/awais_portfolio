@@ -16,7 +16,7 @@ class SkillsSeeder extends Seeder
             ['name' => 'React.js', 'icon_url' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', 'category' => 'frontend', 'proficiency' => 85, 'order' => 3],
             ['name' => 'Node.js', 'icon_url' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', 'category' => 'backend', 'proficiency' => 85, 'order' => 4],
             ['name' => 'PHP', 'icon_url' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg', 'category' => 'backend', 'proficiency' => 90, 'order' => 5],
-            ['name' => 'Laravel', 'icon_url' => 'https://cdn.worldvectorlogo.com/logos/laravel-2.svg', 'category' => 'backend', 'proficiency' => 90, 'order' => 6],
+            ['name' => 'Laravel', 'icon_url' => '/assets/Laravel.svg', 'category' => 'backend', 'proficiency' => 90, 'order' => 6],
             ['name' => 'MySQL', 'icon_url' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', 'category' => 'database', 'proficiency' => 85, 'order' => 7],
             ['name' => 'PostgreSQL', 'icon_url' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', 'category' => 'database', 'proficiency' => 80, 'order' => 8],
             ['name' => 'AWS', 'icon_url' => 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg', 'category' => 'tools', 'proficiency' => 75, 'order' => 9],

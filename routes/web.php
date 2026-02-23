@@ -1,4 +1,3 @@
-
 <?php
 // routes/web.php
 
@@ -31,21 +30,21 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // API routes
 Route::prefix('api')->group(function () {
     Route::post('/chat', [ChatController::class, 'respond'])->name('api.chat');
-    
+
     // Comment routes
     Route::post('/comments', [CommentController::class, 'store'])->name('api.comments.store');
     Route::get('/comments', [CommentController::class, 'index'])->name('api.comments.index');
     Route::get('/comments/count', [CommentController::class, 'count'])->name('api.comments.count');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('api.comments.update');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('api.comments.destroy');
-    
+
     // Rating routes
     Route::post('/ratings', [RatingController::class, 'store'])->name('api.ratings.store');
     Route::get('/ratings', [RatingController::class, 'index'])->name('api.ratings.index');
     Route::get('/ratings/stats', [RatingController::class, 'stats'])->name('api.ratings.stats');
     Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('api.ratings.update');
     Route::delete('/ratings/{rating}', [RatingController::class, 'destroy'])->name('api.ratings.destroy');
-    
+
     // File upload routes
     Route::post('/upload/image', [FileUploadController::class, 'uploadImage'])->name('api.upload.image');
     Route::post('/upload/document', [FileUploadController::class, 'uploadDocument'])->name('api.upload.document');
@@ -56,11 +55,11 @@ Route::prefix('api')->group(function () {
 
 // CV download
 Route::get('/download-cv', function () {
-    $filePath = storage_path('app/public/cv.pdf');
+    $filePath = public_path('assets/Awais_Ahmad_CV.pdf');
     if (file_exists($filePath)) {
         return response()->download($filePath, 'Awais_Ahmad_CV.pdf');
     }
-    abort(404);
+    abort(404, 'CV not found.');
 })->name('cv.download');
 
 // Test route for comments and ratings
