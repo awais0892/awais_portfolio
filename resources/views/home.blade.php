@@ -36,7 +36,7 @@
                     <div
                         class="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 blur-2xl opacity-40 scale-110">
                     </div>
-                    <img src="{{ asset('assets/awais-formal.jpg') }}" alt="Awais Ahmad"
+                    <img src="{{ asset('assets/WhatsApp Image 2026-02-25 at 2.47.53 AM (1).jpeg') }}" alt="Awais Ahmad"
                         class="relative z-10 w-72 h-72 md:w-96 md:h-96 rounded-full object-cover object-top border-4 border-cyan-500/60 shadow-2xl"
                         style="box-shadow: 0 0 40px rgba(0, 245, 255, 0.3), 0 0 80px rgba(122, 0, 255, 0.2);">
                 </div>
@@ -49,7 +49,7 @@
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">About Me</h2>
         <div class="flex flex-col md:flex-row items-center gap-12 glass-card p-8 rounded-lg">
             <div class="md:w-1/3 gsap-reveal">
-                <img src="{{ asset('assets/awais-casual.jpg') }}" alt="Awais Ahmad"
+                <img src="{{ asset('assets/WhatsApp Image 2026-02-25 at 2.47.53 AM.jpeg') }}" alt="Awais Ahmad"
                     class="rounded-full mx-auto shadow-lg w-64 h-64 md:w-full md:h-auto object-cover border-4 border-cyan-500/50">
             </div>
             <div class="md:w-2/3 gsap-reveal" data-gsap-delay="0.1">
