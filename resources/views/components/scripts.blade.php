@@ -165,7 +165,8 @@
                     force3D: true,
                     scrollTrigger: {
                         trigger: "#skills",
-                        start: "top 90%"
+                        start: "top 90%",
+                        once: true
                     }
                 });
             }
@@ -205,7 +206,8 @@
                     force3D: true,
                     scrollTrigger: {
                         trigger: "#projects",
-                        start: "top 90%"
+                        start: "top 90%",
+                        once: true
                     }
                 });
             }
@@ -225,7 +227,8 @@
                     force3D: true,
                     scrollTrigger: {
                         trigger: expCards[0].closest('section'),
-                        start: "top 90%"
+                        start: "top 90%",
+                        once: true
                     }
                 });
             }
