@@ -124,12 +124,10 @@
             const revealElements = document.querySelectorAll(".gsap-reveal");
 
             if (revealElements.length > 0) {
-                const masterTimeline = gsap.timeline();
-
                 revealElements.forEach((el, index) => {
                     const delay = el.dataset.gsapDelay ? parseFloat(el.dataset.gsapDelay) : 0;
 
-                    masterTimeline.fromTo(el, {
+                    gsap.fromTo(el, {
                         opacity: 0,
                         y: 30,
                         scale: 0.95
@@ -144,9 +142,9 @@
                         scrollTrigger: {
                             trigger: el,
                             start: "top 92%",
-                            toggleActions: "play none none reverse"
+                            once: true
                         }
-                    }, index * 0.05);
+                    });
                 });
             }
 
@@ -264,11 +262,11 @@
                 });
             });
 
-            // Parallax effect for background elements
+            // Subtle parallax effect for background elements
             const backgroundElements = document.querySelectorAll('.glass-card');
             backgroundElements.forEach(el => {
                 gsap.to(el, {
-                    y: -50,
+                    y: -10,
                     ease: "none",
                     scrollTrigger: {
                         trigger: el,
@@ -419,10 +417,10 @@
             // Very important: check if already initialized by looking for the wrapper
             // Choices.js wraps the select in a .choices div
             if (el.closest('.choices')) return;
-            
+
             try {
                 new Choices(el, {
-                               searchEnabled: true,
+                    searchEnabled: true,
                     itemSelectText: '',
                     shouldSort: false,
                     placeholder: true,
@@ -571,8 +569,8 @@
             const wrap = document.createElement('div');
             wrap.className = `chat-message ${sender}-message mb-3`;
             const p = document.createElement('p');
-            p.className = (sender === 'user') 
-                ? 'bg-white/90 p-3 rounded-lg text-sm text-black' 
+            p.className = (sender === 'user')
+                ? 'bg-white/90 p-3 rounded-lg text-sm text-black'
                 : 'bg-cyan-900/50 p-3 rounded-lg text-sm';
             p.innerText = text;
             wrap.appendChild(p);
@@ -624,7 +622,7 @@
             e.preventDefault();
             const val = chatInput.value.trim();
             if (!val) return;
-            
+
             addMessage(val, 'user');
             chatInput.value = '';
 
