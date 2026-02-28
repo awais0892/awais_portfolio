@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ExperiencesSeeder::class,
             EducationSeeder::class,
             BlogSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }

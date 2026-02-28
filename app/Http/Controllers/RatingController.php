@@ -58,10 +58,18 @@ class RatingController extends Controller
         }
 
         // Verify the rateable model exists
-        $rateableType = $request->rateable_type;
         $rateableId = $request->rateable_id;
+        // Whitelist allowed rateable types to prevent polymorphic type injection
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->rateable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $rateableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
 
-        if (!class_exists($rateableType)) {
+        if (!$rateableType) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid rateable type'
@@ -153,7 +161,24 @@ class RatingController extends Controller
             ], 422);
         }
 
-        $ratings = Rating::where('rateable_type', $request->rateable_type)
+        // Apply whitelist mapping for reads
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->rateable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $rateableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
+
+        if (!$rateableType) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid rateable type'
+            ], 400);
+        }
+
+        $ratings = Rating::where('rateable_type', $rateableType)
             ->where('rateable_id', $request->rateable_id)
             ->approved()
             ->orderBy('created_at', 'desc')
@@ -196,10 +221,17 @@ class RatingController extends Controller
             ], 422);
         }
 
-        $rateableType = $request->rateable_type;
         $rateableId = $request->rateable_id;
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->rateable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $rateableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
 
-        if (!class_exists($rateableType)) {
+        if (!$rateableType) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid rateable type'

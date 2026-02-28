@@ -52,10 +52,18 @@ class CommentController extends Controller
         }
 
         // Verify the commentable model exists
-        $commentableType = $request->commentable_type;
         $commentableId = $request->commentable_id;
+        // Whitelist allowed commentable types to prevent polymorphic type injection
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->commentable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $commentableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
 
-        if (!class_exists($commentableType)) {
+        if (!$commentableType) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid commentable type'
@@ -129,7 +137,24 @@ class CommentController extends Controller
             ], 422);
         }
 
-        $comments = Comment::where('commentable_type', $request->commentable_type)
+        // Apply the same whitelist mapping for reads
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->commentable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $commentableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
+
+        if (!$commentableType) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid commentable type'
+            ], 400);
+        }
+
+        $comments = Comment::where('commentable_type', $commentableType)
             ->where('commentable_id', $request->commentable_id)
             ->approved()
             ->topLevel()
@@ -187,7 +212,24 @@ class CommentController extends Controller
             ], 422);
         }
 
-        $count = Comment::where('commentable_type', $request->commentable_type)
+        // Apply the same whitelist mapping for count
+        $allowedTypes = [
+            'blog' => \App\Models\Blog::class,
+            'project' => \App\Models\Project::class,
+        ];
+        $requestedType = (string) $request->commentable_type;
+        $key = strtolower($requestedType);
+        $base = strtolower(class_basename($requestedType));
+        $commentableType = $allowedTypes[$key] ?? $allowedTypes[$base] ?? null;
+
+        if (!$commentableType) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid commentable type'
+            ], 400);
+        }
+
+        $count = Comment::where('commentable_type', $commentableType)
             ->where('commentable_id', $request->commentable_id)
             ->approved()
             ->count();

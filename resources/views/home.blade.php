@@ -36,7 +36,7 @@
                     <div
                         class="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 blur-2xl opacity-40 scale-110">
                     </div>
-                    <img src="{{ asset('assets/WhatsApp Image 2026-02-25 at 2.47.53 AM (1).jpeg') }}" alt="Awais Ahmad"
+                    <img src="{{ asset('assets/awais-profile-1.jpeg') }}" alt="Awais Ahmad"
                         class="relative z-10 w-72 h-72 md:w-96 md:h-96 rounded-full object-cover object-top border-4 border-cyan-500/60 shadow-2xl"
                         style="box-shadow: 0 0 40px rgba(0, 245, 255, 0.3), 0 0 80px rgba(122, 0, 255, 0.2);">
                 </div>
@@ -49,7 +49,7 @@
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">About Me</h2>
         <div class="flex flex-col md:flex-row items-center gap-12 glass-card p-8 rounded-lg">
             <div class="md:w-1/3 gsap-reveal">
-                <img src="{{ asset('assets/WhatsApp Image 2026-02-25 at 2.47.53 AM.jpeg') }}" alt="Awais Ahmad"
+                    <img src="{{ asset('assets/awais-profile-2.jpeg') }}" alt="Awais Ahmad" loading="lazy"
                     class="rounded-full mx-auto shadow-lg w-64 h-64 md:w-full md:h-auto object-cover border-4 border-cyan-500/50">
             </div>
             <div class="md:w-2/3 gsap-reveal" data-gsap-delay="0.1">
@@ -58,12 +58,12 @@
                     {!! nl2br(e($settings['about_text'] ?? "I'm a passionate software engineer from Islamabad with a strong command of both Laravel and the MERN stack (MongoDB, Express.js, React, Node.js). My expertise lies in building robust web applications, from managing database migrations and RESTful APIs in Laravel to developing scalable backend architectures.\n\nCurrently working at Pixako Technologies, I've had the opportunity to contribute to a variety of impactful projects, including a U.S. SEC-compliant government application, high-performance e-commerce platforms, and feature-rich expense tracking systems. I'm committed to translating business requirements into efficient, user-friendly solutions with a focus on performance and maintainability.\n\nAs a graduate of COMSATS University Islamabad with a BS in Computer Science, I believe in continuous learning and staying updated with the latest technologies to deliver cutting-edge digital products.")) !!}
                 </div>
                 <div class="flex gap-4">
-                    <a href="{{ $settings['https://www.linkedin.com/in/awaisahmads/'] ?? 'https://www.linkedin.com/in/awaisahmads/' }}"
+                    <a href="{{ $settings['linkedin_url'] ?? 'https://www.linkedin.com/in/awaisahmads/' }}"
                         target="_blank"
                         class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg transition-colors glow-button">
                         LinkedIn Profile
                     </a>
-                    <a href="{{ $settings['https://github.com/awais0892'] ?? 'https://github.com/awais0892' }}"
+                    <a href="{{ $settings['github_url'] ?? 'https://github.com/awais0892' }}"
                         target="_blank"
                         class="border-2 border-cyan-500 hover:bg-cyan-500/20 text-white font-bold py-3 px-6 rounded-lg transition-all">
                         GitHub Profile
@@ -119,7 +119,7 @@
             @foreach($projects as $project)
                 <div class="glass-card rounded-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 gsap-reveal"
                     data-gsap-delay="{{ $loop->index * 0.1 }}">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }} Mockup" class="w-full h-48 object-cover">
+                    <img src="{{ $project->image_url }}" alt="{{ $project->title }} Mockup" class="w-full h-48 object-cover" loading="lazy" width="800" height="480">
                     <div class="p-6">
                         <h3 class="text-xl font-orbitron text-white mb-2">{{ $project->title }}</h3>
                         <p class="text-gray-300 mb-4 h-24">{{ Str::limit($project->description, 120) }}</p>

@@ -47,14 +47,15 @@ class Project extends Model
 
     public function getImageUrlAttribute()
     {
-        // Check if image_url field exists and has a value
-        if (property_exists($this, 'image_url') && $this->image_url) {
-            return $this->image_url;
+        // Prefer explicit URLs if present on the model (use raw to avoid recursion)
+        $explicit = $this->getRawOriginal('image_url') ?? ($this->attributes['image_url'] ?? null);
+        if (!empty($explicit)) {
+            return $explicit;
         }
-        
-        // Check if fallback_image_url field exists and has a value
-        if (property_exists($this, 'fallback_image_url') && $this->fallback_image_url) {
-            return $this->fallback_image_url;
+
+        $fallback = $this->getRawOriginal('fallback_image_url') ?? ($this->attributes['fallback_image_url'] ?? null);
+        if (!empty($fallback)) {
+            return $fallback;
         }
         
         // Use the existing image field if available

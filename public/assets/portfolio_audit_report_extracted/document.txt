@@ -1,0 +1,381 @@
+﻿PROFESSIONAL PORTFOLIO AUDIT
+awaisportfolio.up.railway.app
+Deep Technical, Security & UX Audit  |  February 2026
+Website URL
+https://awaisportfolio.up.railway.app/
+Audit Date
+February 28, 2026
+Auditor Scope
+Security, Performance, UX, Architecture, SEO, DevOps
+Stack Detected
+Node.js / Express backend, EJS/HTML templating, Railway deployment
+Overall Rating
+5.4 / 10 â€” Needs significant improvements before UK job applications
+Critical Issues Found
+6 Critical, 8 High, 9 Medium, 7 Low severity items
+ 
+1. Critical Issues (High Priority)
+The following issues pose the highest risk to security, credibility, and user trust. These must be fixed immediately before sharing the portfolio with UK employers.
+ 
+[C-01] 
+Admin Password Exposed in Plain Text in This Conversation
+  â¬¤ CRITICAL
+The admin password 'admin123' was included in the prompt sent to this audit tool. This password is now logged in an external AI service. Immediately change your admin password. Never include credentials in any message, prompt, or code comment.
+ 
+[C-02] 
+Admin Login Has No Username â€” Only Password
+  â¬¤ CRITICAL
+The /admin/login page asks only for a password with no username. This is a severe authentication design flaw. A single shared password with no user identity means no audit trail, no user-level revocation, and trivial brute-force targeting. Any attacker needs to guess only one field.
+ 
+[C-03] 
+Default/Weak Admin Password (admin123)
+  â¬¤ CRITICAL
+The password 'admin123' is in every brute-force wordlist ever created. It would be cracked in milliseconds. This alone is sufficient for a complete admin panel takeover.
+ 
+[C-04] 
+No Rate Limiting or Account Lockout on Admin Login
+  â¬¤ CRITICAL
+The /admin/login endpoint appears to have no brute-force protection. An attacker can make unlimited login attempts. Combined with a single-field form and a trivially weak password, the admin panel is effectively unprotected against automated attacks.
+ 
+[C-05] 
+Admin Panel Publicly Linked in the Main Navigation
+  â¬¤ CRITICAL
+The 'Admin Login' link appears in the navigation bar visible to every visitor. This advertises the existence and location of the admin panel to potential attackers, reducing the barrier to targeted attacks.
+ 
+[C-06] 
+Image URLs Contain Personal Metadata (WhatsApp Filenames)
+  â¬¤ CRITICAL
+The profile photo is served at /assets/WhatsApp Image 2026-02-25 at 2.47.53 AM (1).jpeg. This reveals: (a) you use WhatsApp, (b) the exact timestamp the photo was taken/received (2:47 AM on Feb 25, 2026), (c) device/platform metadata. UK employers performing due diligence will see this in browser DevTools or page source.
+ 
+2. Security Vulnerabilities
+ 
+2.1 Authentication & Authorization
+[S-01] 
+Single-Factor Password-Only Admin Auth
+  â¬¤ HIGH
+No username field means there's no identity management. A proper auth system should use username + password at minimum, or ideally OAuth/JWT with bcrypt-hashed credentials stored in a database, not hardcoded.
+ 
+[S-02] 
+No CSRF Protection Visible on Forms
+  â¬¤ HIGH
+The contact form, comment form, and rating form show no CSRF token fields. Without CSRF tokens, attackers can trick authenticated users into submitting malicious requests. This is especially dangerous for admin actions.
+ 
+[S-03] 
+Blog Comment & Rating Forms Accept Unvalidated Input
+  â¬¤ HIGH
+The blog post pages expose name, email, comment, and rating fields with client-visible submission. Without server-side input sanitization and output encoding, these are potential XSS injection vectors. A stored XSS attack here could execute JavaScript in every visitor's browser.
+ 
+[S-04] 
+CV Download Serves a Real, Personal Document
+  â¬¤ MEDIUM
+The /download-cv endpoint serves your actual CV PDF with your real phone number (+44 07445986363) and email address. Ensure this file is intentionally public and that the information within is what you want permanently indexed by search engines and bots.
+ 
+[S-05] 
+No Visible Security Headers
+  â¬¤ HIGH
+From the responses received, there is no indication of security headers such as Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, or Permissions-Policy. These headers are standard practice and their absence is a flag in any security audit.
+ 
+[S-06] 
+AI Assistant â€” Unknown Backend Security
+  â¬¤ MEDIUM
+The AI assistant widget sends user messages to a backend. It is unclear whether this proxies to an external LLM API securely, whether API keys are exposed client-side, and whether user inputs are sanitized before being sent. This warrants a code-level review.
+ 
+3. Performance Problems
+ 
+3.1 Asset & Loading Issues
+[P-01] 
+Image Filenames with Spaces and Special Characters
+  â¬¤ HIGH
+File paths like '/assets/WhatsApp Image 2026-02-25 at 2.47.53 AM (1).jpeg' contain spaces and parentheses. Browsers must URL-encode these, causing unnecessary encoding overhead, broken links in some contexts, and failed fetches from certain CDNs or proxies. Rename all assets to kebab-case (e.g., awais-profile.jpg).
+ 
+[P-02] 
+All Project Images Sourced from Unsplash with Fixed Dimensions
+  â¬¤ MEDIUM
+Every project card uses generic Unsplash stock photos (e.g., photo-1516321318423-f06f85e504b3?w=800&h=600). These are external dependencies, not your own images. They add external network requests, have no relevance to your actual projects, and signal low effort to technical reviewers who inspect the page source.
+ 
+[P-03] 
+No Lazy Loading Evident for Images Below the Fold
+  â¬¤ MEDIUM
+The homepage loads multiple images including skills icons, project thumbnails, and two profile photos. Without lazy loading (loading='lazy'), all images are fetched on initial load, increasing Time to Interactive and Largest Contentful Paint scores.
+ 
+[P-04] 
+External CDN Dependency for All Skill Icons
+  â¬¤ LOW
+All technology icons are loaded from cdn.jsdelivr.net and upload.wikimedia.org. If these CDNs are slow or unavailable, the skills section renders with broken images. Consider self-hosting critical icons or using a sprite sheet.
+ 
+[P-05] 
+Railway Free-Tier Cold Starts
+  â¬¤ MEDIUM
+Deployed on Railway (likely a hobby/free plan based on the domain). Railway free-tier containers spin down after inactivity, resulting in cold starts of 5-20 seconds for first visitors. UK employers clicking your portfolio link may see a loading spinner for 15+ seconds â€” a terrible first impression.
+ 
+4. Code Architecture Issues
+ 
+4.1 Backend & API Design
+[A-01] 
+Blog Content is Extremely Thin (One Short Paragraph)
+  â¬¤ HIGH
+Both blog posts contain a single short paragraph (~60-80 words) as their entire body content. A blog post titled 'Laravel 11: What is New and Why You Should Upgrade' that covers that topic in one paragraph is unconvincing as a technical writing showcase. UK employers will click through and see shallow content.
+ 
+[A-02] 
+Project Descriptions Truncated Without Full Detail Pages
+  â¬¤ MEDIUM
+Project cards on the homepage truncate descriptions mid-sentence (e.g., '...for better student management with...'). The detail pages provide only a single paragraph. There is no: GitHub link for all projects, live demo for most projects, screenshots of the actual application, technical architecture explanation, or challenges/solutions narrative.
+ 
+[A-03] 
+No Source Code Links for Professional Work Projects
+  â¬¤ LOW
+The E-commerce Platform, Expense Tracker, and Task Management System â€” which represent your most impressive professional work â€” have no GitHub links, no live demos, and no screenshots. These are likely NDA-restricted, but that should be explicitly stated.
+ 
+[A-04] 
+CV Shows 'Sep 2024 â€“ Present' But Portfolio Shows 'Sep 2023 â€“ Present'
+  â¬¤ HIGH
+Critical discrepancy: the downloadable CV states your employment at Pixako Technologies started Sep 2024, but the portfolio website states Sep 2023. This inconsistency will be noticed by UK recruiters and hiring managers who compare your CV to your portfolio. Correct this immediately.
+ 
+[A-05] 
+Education Section Date Discrepancy
+  â¬¤ MEDIUM
+The portfolio shows 'MSc AI at University of Dundee: 2024-2025' but the CV states 'Jan 2026 â€“ Present'. These dates conflict. The blog post titled 'Getting Started with Artificial Intelligence in 2024' suggests AI work predating your MSc, which also appears anachronistic.
+ 
+[A-06] 
+Blog Post Title Date Mismatch
+  â¬¤ LOW
+'Getting Started with Artificial Intelligence in 2024' â€” published Feb 2026. The title references 2024 but the post is dated 2026. A small but noticeable inconsistency that reduces credibility.
+ 
+4.2 Frontend Architecture
+[A-07] 
+No Meta Description or Open Graph Tags
+  â¬¤ MEDIUM
+The pages lack <meta name='description'> tags and Open Graph (og:title, og:image, og:description) tags. When your URL is shared on LinkedIn or Twitter by a recruiter, it will show a blank preview with no image or description â€” a missed opportunity for a strong impression.
+ 
+[A-08] 
+Broken Image on Project Detail Page
+  â¬¤ HIGH
+The Digital Student Diary detail page contains an <img> tag with an empty src attribute rendering as a broken image icon in the bottom-right of the page. This is a bug visible to every visitor and signals insufficient testing.
+ 
+[A-09] 
+No 404 Page Customization Observable
+  â¬¤ LOW
+Non-existent routes likely show a raw server error or Railway default error page. A custom 404 page is standard practice and an opportunity to maintain brand experience and redirect users helpfully.
+ 
+5. UI/UX Improvements
+ 
+5.1 Design & Visual Consistency
+The overall visual design is competent and modern with a dark/tech aesthetic. However, several UX issues undermine the professional impression:
+ 
+UX Issue
+Detail & Recommendation
+Admin link in nav bar
+The 'Admin Login' link clutters the public-facing navigation. It should be hidden from the nav entirely. Admin can access /admin/login directly.
+Stock photos for all projects
+All 6 projects use Unsplash stock photography with no relation to the actual apps. Use real screenshots of your applications or UI mockups created in Figma.
+AI chatbot widget always visible
+The floating AI assistant is present on every page including project detail pages and blog posts where it obscures content on smaller screens. Make it collapsible by default.
+Skills section lacks proficiency levels
+The skills grid shows icons without proficiency indicators. UK employers want to see: Expert / Proficient / Familiar distinctions. A skills matrix table communicates this better.
+Blog has only 2 posts
+With only 2 blog posts (both short), the blog section feels incomplete. Either expand with substantive content or remove it until you have 5+ quality articles.
+Contact form has no success/error state
+The contact form shows no confirmation message or error handling UI visible in the static page. Submitting without JavaScript confirmation is poor UX.
+Missing live demo links for most projects
+Of 6 projects, only 2 have live demo links. Employers want to interact with your work, not just read descriptions.
+Neutral 'typo' in CV email
+The CV shows 'awais.32525@gmailcom' (missing the period before 'com'). This must be corrected â€” it means email sent to this address will bounce.
+ 
+6. SEO Improvements
+ 
+For a developer portfolio, SEO matters. UK recruiters and tech leads often Google candidates before interviews. Your portfolio should rank for searches like 'Awais Ahmad developer portfolio'.
+ 
+[SEO-01] 
+No Meta Description Tags on Any Page
+  â¬¤ HIGH
+None of the pages audited (/, /projects, /blog, /project/*, /blog/*) appear to have meta description tags. Google uses these in search result snippets. Without them, Google generates its own snippet â€” usually unflattering. Add unique, keyword-rich descriptions to every page.
+ 
+[SEO-02] 
+No Structured Data / JSON-LD Schema
+  â¬¤ MEDIUM
+Adding schema.org Person markup with your name, job title, employer, and social links would help Google understand and display your profile information in rich results. This is a 30-minute implementation with significant SEO upside.
+ 
+[SEO-03] 
+No sitemap.xml or robots.txt
+  â¬¤ MEDIUM
+Without a sitemap, search engine crawlers may miss pages. Without robots.txt, admin pages could theoretically be indexed. Both files are quick wins that signal professional deployment practices.
+ 
+[SEO-04] 
+Blog Post Titles are Generic and Not Optimized
+  â¬¤ LOW
+'Getting Started with Artificial Intelligence in 2024' is a title used by hundreds of articles. There's no differentiating keyword (your name, location, tech stack). Consider title formats like 'Laravel 11 New Features: A MERN Stack Developer's Perspective'.
+ 
+[SEO-05] 
+No Canonical Tags on Blog Posts
+  â¬¤ LOW
+If blog content appears under multiple URLs (e.g., /blog/tag/Laravel also surfaces the post), canonical tags prevent duplicate content penalties. Add <link rel='canonical'> to all content pages.
+ 
+[SEO-06] 
+Page Titles Could Include Your Name
+  â¬¤ LOW
+Some pages have titles like 'My Projects' and 'Latest Blog Posts' without including 'Awais Ahmad'. Titles like 'Projects | Awais Ahmad â€” Full-Stack Developer' perform better for personal branding searches.
+ 
+7. Deployment & DevOps Improvements
+ 
+[D-01] 
+Railway Free-Tier Cold Starts Affect First Impression
+  â¬¤ HIGH
+The railway.app free/hobby tier spins down inactive containers. If a recruiter clicks your portfolio link during cold state, they'll wait 5-20 seconds. Consider: (1) Using Railway's always-on paid plan (~$5/mo), (2) Migrating to Vercel/Netlify for static parts, (3) Setting up a cron job to ping the site every 5 minutes to prevent cold starts.
+ 
+[D-02] 
+No Custom Domain
+  â¬¤ MEDIUM
+The URL 'awaisportfolio.up.railway.app' includes the hosting provider branding. A custom domain like 'awaisahmad.dev' costs ~Â£10/year and signals professional ownership of your personal brand. UK employers will notice this.
+ 
+[D-03] 
+No HTTPS Enforcement Visible in Navigation
+  â¬¤ LOW
+Railway provides SSL by default. Verify that HTTP requests are redirected to HTTPS (301 redirect). Also verify the SSL certificate is valid and not expiring soon.
+ 
+[D-04] 
+No Visible CI/CD Pipeline
+  â¬¤ LOW
+There is no indication of automated testing or deployment pipelines. For a portfolio demonstrating DevOps awareness, adding a GitHub Actions CI/CD badge to your portfolio README (and linking your GitHub) would demonstrate maturity.
+ 
+[D-05] 
+Error Handling for 500 Responses Unknown
+  â¬¤ MEDIUM
+It is unclear whether server errors return a branded error page or expose raw stack traces. In production, stack traces must never be exposed to users â€” they reveal file paths, dependencies, and internal logic useful to attackers.
+ 
+8. Overall Rating: 5.4 / 10
+ 
+Score breakdown by category (out of 10):
+ 
+Functionality                 
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘
+  6.5/10
+Security                      
+â–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘
+  2.5/10
+Performance                   
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘
+  5.5/10
+Code Architecture             
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘
+  5/10
+UI/UX Design                  
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘
+  6.5/10
+SEO                           
+â–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘
+  3.5/10
+Content Quality               
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘
+  4.5/10
+Deployment/DevOps             
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘
+  5/10
+Professional Credibility      
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘
+  5/10
+ 
+OVERALL
+â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  5.4 / 10
+ 
+Verdict for UK Job Applications
+The portfolio demonstrates solid design sensibility and covers the right sections. However, the critical security issues (weak admin auth, no brute-force protection, exposed admin link), data inconsistencies between the CV and portfolio, thin blog content, and lack of a custom domain all reduce professional credibility. A UK hiring manager or senior engineer reviewing this portfolio would have serious reservations. With the action plan below, this can realistically reach 8.5/10 within 2 weeks.
+ 
+9. Step-by-Step Action Plan
+ 
+Prioritized by urgency. Items marked [URGENT] must be completed before sharing the portfolio with any UK employer.
+ 
+Phase 1: Immediate Security Fixes (Do Today â€” Week 1)
+ 
+#
+Task
+Action
+Priority
+1
+Change admin password
+Immediately change to a cryptographically strong password (20+ chars, mixed case, symbols, numbers). Store in a password manager â€” never in code or messages.
+URGENT
+2
+Add username to admin login
+Implement proper username + password authentication. Hash password with bcrypt (min 10 rounds). Never store plain-text credentials.
+URGENT
+3
+Add brute-force protection
+Implement express-rate-limit on /admin/login: max 5 attempts per 15 minutes per IP. Add account lockout logic.
+URGENT
+4
+Remove admin link from nav
+Delete the Admin Login nav item from public navigation. Admin can access /admin/login by typing the URL directly.
+URGENT
+5
+Rename image assets
+Rename all asset files to kebab-case with no spaces: awais-profile-1.jpg, awais-profile-2.jpg. Update all references.
+URGENT
+6
+Fix CV email typo
+Correct 'awais.32525@gmailcom' to the proper email address in your CV PDF immediately.
+URGENT
+7
+Add CSRF tokens to all forms
+Use csurf middleware (Express) for all POST forms: contact, comment, rating, admin login.
+High
+8
+Add security headers
+Use helmet.js npm package â€” one line: app.use(helmet()). Adds CSP, X-Frame-Options, X-Content-Type-Options automatically.
+High
+ 
+Phase 2: Content & Credibility Fixes (Week 1-2)
+ 
+Synchronize CV and portfolio dates â€” pick one consistent start date for Pixako Technologies (Sep 2023 or Sep 2024) and update both documents to match.
+Fix the MSc dates â€” update the portfolio to show 'Jan 2026 â€“ Present' matching the CV, or clarify enrollment vs. start date.
+Expand blog posts â€” each post should be 800-1500 words with code examples, headings, and practical takeaways. Add 3-5 more posts on topics you know well: MERN stack tips, Laravel best practices, SEC compliance learnings.
+Replace Unsplash stock photos with real application screenshots. Take screenshots of your actual working applications, annotate them if needed, and use those. This is your most important credibility signal.
+Fix the broken image on the Digital Student Diary detail page â€” find the empty src tag and either add a proper image or remove the tag.
+Expand project detail pages â€” add: technology choices rationale, architecture diagram, challenges faced and solved, link to GitHub (or state 'Proprietary/NDA' if applicable), and screenshots/GIFs of the application in action.
+ 
+Phase 3: Performance & SEO (Week 2-3)
+ 
+Add meta description tags to every page. Aim for 150-160 characters, include your name and primary skills.
+Add Open Graph tags (og:title, og:description, og:image) for social media link previews. Use a professional headshot as the og:image.
+Create /sitemap.xml and /robots.txt. Disallow /admin/* in robots.txt to prevent admin login page from being indexed.
+Add loading='lazy' to all images below the fold. Add explicit width and height attributes to prevent layout shift (CLS).
+Register a custom domain (e.g., awaisahmad.dev or awaisahmad.co.uk) and point it to Railway. Update all profiles (LinkedIn, GitHub, CV) with the new URL.
+ 
+Phase 4: Professional Polish (Week 3-4)
+ 
+Add a testimonials/recommendations section â€” ask your manager or colleagues at Pixako to write 2-3 sentence professional endorsements that you can feature.
+Add a skills proficiency matrix â€” replace the icon grid with a table showing: Technology | Years of Experience | Proficiency Level. This is more informative and scannable.
+Add GitHub contribution stats or a featured GitHub repository section. Embed your GitHub contribution graph or showcase your top repositories with star counts.
+Add a custom 404 page that maintains your branding and links back to the homepage and projects page.
+Consider adding a JSON-LD Person schema to your homepage for enhanced Google rich results that show your name, employer, and social links directly in search results.
+ 
+Appendix: Key Findings Summary
+ 
+Category
+Score
+Top Priority Fix
+Functionality
+6.5/10
+Fix broken image on project page; add form validation feedback
+Security
+2.5/10
+Replace password-only auth; add rate limiting; remove admin nav link
+Performance
+5.5/10
+Upgrade to always-on Railway plan; add lazy loading
+Architecture
+5.0/10
+Fix CV/portfolio date discrepancies; add input sanitization
+UI/UX
+6.5/10
+Replace stock photos with real screenshots; expand project pages
+SEO
+3.5/10
+Add meta descriptions and Open Graph tags to all pages
+Content
+4.5/10
+Expand blog posts to 800+ words; add 3+ new technical articles
+DevOps
+5.0/10
+Register custom domain; add robots.txt and sitemap.xml
+  
+Report prepared by: Senior Full-Stack & Security Audit (Claude AI)  |  awaisportfolio.up.railway.app  |  February 2026  |  For private use only

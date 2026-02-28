@@ -72,6 +72,16 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Simple HTML escape to prevent XSS when injecting user content
+        const escapeHtml = (str) => {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
         const commentsSection = document.querySelector('.comments-section');
         const commentForm = document.getElementById('comment-form');
         const commentsList = document.getElementById('comments-list');
@@ -233,14 +243,14 @@
             commentDiv.innerHTML = `
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                    ${comment.initials}
+                    ${escapeHtml(comment.initials)}
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center gap-3 mb-2">
-                        <h5 class="font-semibold text-white">${comment.name}</h5>
-                        <span class="text-sm text-cyan-300/70">${comment.formatted_date}</span>
+                        <h5 class="font-semibold text-white">${escapeHtml(comment.name)}</h5>
+                        <span class="text-sm text-cyan-300/70">${escapeHtml(comment.formatted_date)}</span>
                     </div>
-                    <p class="text-cyan-200/90 leading-relaxed mb-3">${comment.content}</p>
+                    <p class="text-cyan-200/90 leading-relaxed mb-3">${escapeHtml(comment.content)}</p>
                     <button class="reply-btn text-sm text-cyan-400 hover:text-cyan-300 transition-colors" data-comment-id="${comment.id}">
                         <i class="fas fa-reply mr-1"></i>
                         Reply
@@ -253,14 +263,14 @@
                         <div class="reply-item bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
                             <div class="flex items-start gap-3">
                                 <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-semibold text-xs">
-                                    ${reply.initials}
+                                    ${escapeHtml(reply.initials)}
                                 </div>
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 mb-1">
-                                        <h6 class="font-medium text-white text-sm">${reply.name}</h6>
-                                        <span class="text-xs text-cyan-300/70">${reply.formatted_date}</span>
+                                        <h6 class="font-medium text-white text-sm">${escapeHtml(reply.name)}</h6>
+                                        <span class="text-xs text-cyan-300/70">${escapeHtml(reply.formatted_date)}</span>
                                     </div>
-                                    <p class="text-cyan-200/90 text-sm leading-relaxed">${reply.content}</p>
+                                    <p class="text-cyan-200/90 text-sm leading-relaxed">${escapeHtml(reply.content)}</p>
                                 </div>
                             </div>
                         </div>

@@ -56,12 +56,6 @@
                         </button>
                     </form>
                 </div>
-            @else
-                <a href="{{ route('admin.login') }}"
-                    class="ml-4 hidden md:inline-block bg-transparent border border-cyan-500 text-cyan-400 font-semibold py-2 px-4 rounded-lg hover:bg-cyan-500/10">
-                    <i class="fas fa-user-shield mr-2"></i>
-                    Admin Login
-                </a>
             @endif
             <button id="mobile-menu-button" class="md:hidden text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -91,12 +85,6 @@
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </button>
                 </form>
-            </div>
-        @else
-            <div class="border-t border-cyan-500/20 mt-2">
-                <a href="{{ route('admin.login') }}" class="block py-3 px-4 text-sm text-cyan-300 hover:bg-cyan-900/50">
-                    <i class="fas fa-user-shield mr-2"></i>Admin Login
-                </a>
             </div>
         @endif
     </div>

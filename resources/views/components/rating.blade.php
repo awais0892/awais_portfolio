@@ -117,6 +117,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Simple HTML escape to prevent XSS when injecting user content
+    const escapeHtml = (str) => {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
     const ratingSection = document.querySelector('.rating-section');
     const ratingForm = document.getElementById('rating-form');
     const ratingsList = document.getElementById('ratings-list');
@@ -372,17 +382,17 @@ document.addEventListener('DOMContentLoaded', function() {
         ratingDiv.innerHTML = `
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                    ${rating.initials}
+                    ${escapeHtml(rating.initials)}
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center gap-3 mb-2">
-                        <h5 class="font-semibold text-white">${rating.name}</h5>
+                        <h5 class="font-semibold text-white">${escapeHtml(rating.name)}</h5>
                         <div class="flex items-center gap-1">
                             ${rating.stars_html}
                         </div>
-                        <span class="text-sm text-cyan-300/70">${rating.formatted_date}</span>
+                        <span class="text-sm text-cyan-300/70">${escapeHtml(rating.formatted_date)}</span>
                     </div>
-                    ${rating.review ? `<p class="text-cyan-200/90 leading-relaxed">${rating.review}</p>` : ''}
+                    ${rating.review ? `<p class="text-cyan-200/90 leading-relaxed">${escapeHtml(rating.review)}</p>` : ''}
                 </div>
             </div>
         `;

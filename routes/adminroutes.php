@@ -9,29 +9,16 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CommentManagementController;
 use App\Http\Controllers\Admin\SkillController;
 use App\Http\Controllers\Admin\ExperienceController;
+use App\Http\Controllers\Admin\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Authentication routes (simple implementation)
-    Route::get('/login', function () {
-        return view('admin.auth.login');
-    })->name('login');
-
-    Route::post('/login', function (Request $request) {
-        // Simple authentication - replace with proper auth later
-        if ($request->password === env('ADMIN_PASSWORD', 'admin123')) { // Change this!
-            session(['is_admin' => true]);
-            return redirect()->route('admin.dashboard');
-        }
-        return back()->withErrors(['password' => 'Invalid credentials']);
-    })->name('login.submit');
-
-    Route::post('/logout', function () {
-        session()->forget('is_admin');
-        return redirect()->route('home');
-    })->name('logout');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,15')->name('login.submit');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Protected admin routes (use explicit middleware class to avoid alias resolution issues)
     Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {

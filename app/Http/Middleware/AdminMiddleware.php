@@ -11,8 +11,8 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Simple admin guard; replace with proper auth later.
-        if (! session('is_admin')) {
+        // Require an authenticated user for admin routes
+        if (! $request->user()) {
             return redirect()->route('admin.login');
         }
 

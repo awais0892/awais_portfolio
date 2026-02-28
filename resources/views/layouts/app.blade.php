@@ -9,6 +9,17 @@
     <meta name="description"
         content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
 
+    <!-- Open Graph / Twitter Meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')">
+    <meta property="og:description" content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/awais-formal.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')">
+    <meta name="twitter:description" content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
+    <meta name="twitter:image" content="{{ asset('assets/awais-formal.jpg') }}">
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/logo.svg') }}">
     <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
