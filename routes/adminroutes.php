@@ -20,6 +20,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,15')->name('login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Temporary diagnostic route (comment this out after use)
+    Route::get('/diag', function () {
+        if (app()->environment('local'))
+            return "Only for production troubleshooting";
+        $email = config('admin.email');
+        $user = \App\Models\User::where('email', $email)->first();
+        return [
+            'configured_email' => $email,
+            'user_found' => (bool) $user,
+            'user_email' => $user ? $user->email : 'N/A',
+            'password_hash_check' => $user ? (strlen($user->password) > 0) : false,
+            'app_env' => app()->environment(),
+            'config_cached' => app()->configurationIsCached(),
+        ];
+    });
+
     // Protected admin routes (use explicit middleware class to avoid alias resolution issues)
     Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
