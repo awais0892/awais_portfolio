@@ -10,10 +10,11 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL');
-        $password = env('ADMIN_PASSWORD');
+        $email = config('admin.email');
+        $password = config('admin.password');
 
-        if (! $email || ! $password) {
+        if (!$email || !$password) {
+            \Illuminate\Support\Facades\Log::warning('AdminUserSeeder: ADMIN_EMAIL or ADMIN_PASSWORD not set in configuration.');
             return;
         }
 
@@ -24,5 +25,7 @@ class AdminUserSeeder extends Seeder
                 'password' => Hash::make($password),
             ]
         );
+
+        \Illuminate\Support\Facades\Log::info("Admin user updated/created: {$email}");
     }
 }
