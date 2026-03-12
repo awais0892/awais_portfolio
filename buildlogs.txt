@@ -1,0 +1,920 @@
+[INFO] yes
+
+[INFO] checking for cc option to enable C11 features... 
+[INFO] none needed
+
+[INFO] checking how to run the C preprocessor... 
+[INFO] cc -E
+
+[INFO] checking for icc... 
+[INFO] no
+
+[INFO] checking for suncc... 
+[INFO] no
+
+[INFO] checking for system library directory... 
+[INFO] lib
+
+[INFO] checking if compiler supports -Wl,-rpath,... 
+[INFO] yes
+
+[INFO] checking build system type... 
+[INFO] x86_64-pc-linux-gnu
+
+[INFO] checking host system type... 
+[INFO] x86_64-pc-linux-gnu
+
+[INFO] checking target system type... 
+[INFO] x86_64-pc-linux-gnu
+
+[INFO] checking for PHP prefix... /usr/local
+
+[INFO] checking for PHP includes... 
+[INFO] -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib
+
+[INFO] checking for PHP extension directory... 
+[INFO] /usr/local/lib/php/extensions/no-debug-zts-20220829
+checking for PHP installed headers prefix... 
+[INFO] /usr/local/include/php
+
+[INFO] checking if debug is enabled... 
+[INFO] no
+checking if zts is enabled... 
+[INFO] yes
+
+[INFO] checking for gawk... 
+[INFO] no
+
+[INFO] checking for nawk... 
+[INFO] nawk
+
+[INFO] checking if nawk is broken... 
+[INFO] no
+
+[INFO] checking for MySQL support for PDO... 
+[INFO] yes, shared
+
+[INFO] checking for the location of libz... 
+[INFO] no
+
+[INFO] checking for MySQL UNIX socket location... 
+[INFO] 
+
+[INFO] checking for PDO includes... 
+[INFO] /usr/local/include/php/ext
+
+[INFO] checking for a sed that does not truncate output... 
+[INFO] /usr/bin/sed
+
+[INFO] checking for ld used by cc... 
+[INFO] /usr/bin/ld
+
+[INFO] checking if the linker (/usr/bin/ld) is GNU ld... 
+[INFO] yes
+
+[INFO] checking for /usr/bin/ld option to reload object files... 
+[INFO] -r
+
+[INFO] checking for BSD-compatible nm... 
+[INFO] /usr/bin/nm -B
+
+[INFO] checking whether ln -s works... 
+[INFO] yes
+checking how to recognize dependent libraries... 
+[INFO] pass_all
+
+[INFO] checking for stdio.h... 
+[INFO] yes
+
+[INFO] checking for stdlib.h... 
+[INFO] yes
+
+[INFO] checking for string.h... 
+[INFO] yes
+
+[INFO] checking for inttypes.h... 
+[INFO] yes
+
+[INFO] checking for stdint.h... 
+[INFO] yes
+
+[INFO] checking for strings.h... 
+[INFO] yes
+
+[INFO] checking for sys/stat.h... 
+[INFO] yes
+
+[INFO] checking for sys/types.h... 
+[INFO] yes
+
+[INFO] checking for unistd.h... 
+[INFO] yes
+
+[INFO] checking for dlfcn.h... 
+[INFO] yes
+
+[INFO] checking the maximum length of command line arguments... 
+[INFO] 1572864
+
+[INFO] checking command to parse /usr/bin/nm -B output from cc object... 
+[INFO] ok
+checking for objdir... 
+[INFO] .libs
+
+[INFO] checking for ar... 
+[INFO] ar
+
+[INFO] checking for ranlib... 
+[INFO] ranlib
+
+[INFO] checking for strip... 
+[INFO] strip
+
+[INFO] checking if cc supports -fno-rtti -fno-exceptions... 
+[INFO] no
+
+[INFO] checking for cc option to produce PIC... 
+[INFO] -fPIC
+
+[INFO] checking if cc PIC flag -fPIC works... 
+[INFO] yes
+
+[INFO] checking if cc static flag -static works... 
+[INFO] yes
+checking if cc supports -c -o file.o... 
+[INFO] yes
+
+[INFO] checking whether the cc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... 
+[INFO] yes
+
+[INFO] checking whether -lc should be explicitly linked in... 
+[INFO] no
+
+[INFO] checking dynamic linker characteristics... 
+[INFO] GNU/Linux ld.so
+
+[INFO] checking how to hardcode library paths into programs... 
+[INFO] immediate
+
+[INFO] checking whether stripping libraries is possible... 
+[INFO] yes
+
+[INFO] checking if libtool supports shared libraries... 
+[INFO] yes
+
+[INFO] checking whether to build shared libraries... 
+[INFO] yes
+
+[INFO] checking whether to build static libraries... 
+[INFO] no
+
+[INFO] 
+creating libtool
+
+[INFO] appending configuration tag "CXX" to libtool
+
+[INFO] configure: patching config.h.in
+
+[INFO] configure: creating ./config.status
+
+[INFO] config.status: creating config.h
+
+[INFO] /bin/bash /usr/src/php/ext/pdo_mysql/libtool --tag=CC --mode=compile cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib  -DHAVE_CONFIG_H   -D_GNU_SOURCE   -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/pdo_mysql.c -o pdo_mysql.lo  -MMD -MF pdo_mysql.dep -MT pdo_mysql.lo
+
+[INFO] /bin/bash /usr/src/php/ext/pdo_mysql/libtool --tag=CC --mode=compile cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib  -DHAVE_CONFIG_H   -D_GNU_SOURCE   -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/mysql_driver.c -o mysql_driver.lo  -MMD -MF mysql_driver.dep -MT mysql_driver.lo
+
+[INFO] /bin/bash /usr/src/php/ext/pdo_mysql/libtool --tag=CC --mode=compile cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib  -DHAVE_CONFIG_H   -D_GNU_SOURCE   -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/mysql_statement.c -o mysql_statement.lo  -MMD -MF mysql_statement.dep -MT mysql_statement.lo
+
+[INFO] mkdir .libs
+
+[INFO]  cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib -DHAVE_CONFIG_H -D_GNU_SOURCE -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/pdo_mysql.c -MMD -MF pdo_mysql.dep -MT pdo_mysql.lo  -fPIC -DPIC -o .libs/pdo_mysql.o
+
+[INFO]  cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib -DHAVE_CONFIG_H -D_GNU_SOURCE -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/mysql_driver.c -MMD -MF mysql_driver.dep -MT mysql_driver.lo  -fPIC -DPIC -o .libs/mysql_driver.o
+
+[INFO]  cc -I. -I/usr/src/php/ext/pdo_mysql -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib -DHAVE_CONFIG_H -D_GNU_SOURCE -I/usr/local/include/php/ext -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DZEND_COMPILE_DL_EXT=1 -c /usr/src/php/ext/pdo_mysql/mysql_statement.c -MMD -MF mysql_statement.dep -MT mysql_statement.lo  -fPIC -DPIC -o .libs/mysql_statement.o
+
+[INFO] /bin/bash /usr/src/php/ext/pdo_mysql/libtool --tag=CC --mode=link cc -shared -I/usr/src/php/ext/pdo_mysql/include -I/usr/src/php/ext/pdo_mysql/main -I/usr/src/php/ext/pdo_mysql -I/usr/local/include/php -I/usr/local/include/php/main -I/usr/local/include/php/TSRM -I/usr/local/include/php/Zend -I/usr/local/include/php/ext -I/usr/local/include/php/ext/date/lib  -DHAVE_CONFIG_H   -D_GNU_SOURCE    -o pdo_mysql.la -export-dynamic -avoid-version -prefer-pic -module -rpath /usr/src/php/ext/pdo_mysql/modules  pdo_mysql.lo mysql_driver.lo mysql_statement.lo 
+
+[INFO] cc -shared  .libs/pdo_mysql.o .libs/mysql_driver.o .libs/mysql_statement.o   -Wl,-soname -Wl,pdo_mysql.so -o .libs/pdo_mysql.so
+
+[INFO] creating pdo_mysql.la
+
+[INFO] (cd .libs && rm -f pdo_mysql.la && ln -s ../pdo_mysql.la pdo_mysql.la)
+
+[INFO] /bin/bash /usr/src/php/ext/pdo_mysql/libtool --tag=CC --mode=install cp ./pdo_mysql.la /usr/src/php/ext/pdo_mysql/modules
+
+[INFO] cp ./.libs/pdo_mysql.so /usr/src/php/ext/pdo_mysql/modules/pdo_mysql.so
+
+[INFO] cp ./.libs/pdo_mysql.lai /usr/src/php/ext/pdo_mysql/modules/pdo_mysql.la
+
+[INFO] PATH="$PATH:/sbin" ldconfig -n /usr/src/php/ext/pdo_mysql/modules
+
+[INFO] ----------------------------------------------------------------------
+
+[INFO] Libraries have been installed in:
+   /usr/src/php/ext/pdo_mysql/modules
+
+
+[INFO] If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+
+[INFO] specify the full pathname of the library, or use the `-LLIBDIR'
+
+[INFO] flag during linking and do at least one of the following:
+
+[INFO]    - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+
+[INFO]    - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+
+[INFO]    - use the `-Wl,--rpath -Wl,LIBDIR' linker flag
+
+[INFO]    - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+
+[INFO] See any operating system documentation about shared libraries for
+
+[INFO] more information, such as the ld(1) and ld.so(8) manual pages.
+
+[INFO] ----------------------------------------------------------------------
+
+[INFO] 
+
+[INFO] Build complete.
+
+[INFO] Don't forget to run 'make test'.
+
+[INFO] 
+
+[INFO] + strip --strip-all modules/pdo_mysql.so
+
+[INFO] Installing shared extensions:     /usr/local/lib/php/extensions/no-debug-zts-20220829/
+
+[INFO] find . -name \*.gcno -o -name \*.gcda | xargs rm -f
+
+[INFO] find . -name \*.lo -o -name \*.o -o -name \*.dep | xargs rm -f
+
+[INFO] find . -name \*.la -o -name \*.a | xargs rm -f
+
+[INFO] find . -name \*.so | xargs rm -f
+
+[INFO] find . -name .libs -a -type d|xargs rm -rf
+
+[INFO] rm -f libphp.la      modules/* libs/*
+
+[INFO] rm -f ext/opcache/jit/zend_jit_x86.c
+
+[INFO] rm -f ext/opcache/jit/zend_jit_arm64.c
+
+[INFO] rm -f ext/opcache/minilua
+
+[INFO] install-php-extensions ctype curl dom fileinfo filter hash mbstring openssl pcre pdo session tokenizer xml pdo_mysql
+[INFO] copy /usr/bin/composer
+[INFO] copy /usr/bin/composer
+[INFO] copy composer.json
+[INFO] copy composer.json
+[INFO] copy composer.lock
+[INFO] copy composer.lock
+[INFO] copy artisan
+[INFO] copy artisan
+[INFO] composer install --optimize-autoloader --no-scripts --no-interaction
+[INFO] Installing dependencies from lock file (including require-dev)
+
+[INFO] Verifying lock file contents can be installed on current platform.
+
+[INFO] Package operations: 118 installs, 0 updates, 0 removals
+
+[INFO]   - Downloading voku/portable-ascii (2.0.3)
+
+[INFO]   - Downloading symfony/polyfill-php80 (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-mbstring (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-ctype (v1.32.0)
+
+[INFO]   - Downloading phpoption/phpoption (1.9.3)
+
+[INFO]   - Downloading graham-campbell/result-type (v1.1.3)
+
+[INFO]   - Downloading vlucas/phpdotenv (v5.6.2)
+
+[INFO]   - Downloading symfony/css-selector (v7.3.0)
+
+[INFO]   - Downloading tijsverkoyen/css-to-inline-styles (v2.3.0)
+
+[INFO]   - Downloading symfony/deprecation-contracts (v3.6.0)
+
+[INFO]   - Downloading symfony/var-dumper (v7.3.2)
+
+[INFO]   - Downloading symfony/polyfill-uuid (v1.32.0)
+
+[INFO]   - Downloading symfony/uid (v7.3.1)
+
+[INFO]   - Downloading symfony/routing (v7.3.2)
+
+[INFO]   - Downloading symfony/process (v7.3.0)
+
+[INFO]   - Downloading symfony/polyfill-php85 (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-php84 (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-php83 (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-intl-normalizer (v1.32.0)
+
+[INFO]   - Downloading symfony/polyfill-intl-idn (v1.32.0)
+
+[INFO]   - Downloading symfony/mime (v7.3.2)
+
+[INFO]   - Downloading psr/container (2.0.2)
+
+[INFO]   - Downloading symfony/service-contracts (v3.6.0)
+
+[INFO]   - Downloading psr/event-dispatcher (1.0.0)
+
+[INFO]   - Downloading symfony/event-dispatcher-contracts (v3.6.0)
+
+[INFO]   - Downloading symfony/event-dispatcher (v7.3.0)
+
+[INFO]   - Downloading psr/log (3.0.2)
+
+[INFO]   - Downloading doctrine/lexer (3.0.1)
+
+[INFO]   - Downloading egulias/email-validator (4.0.4)
+
+[INFO]   - Downloading symfony/mailer (v7.3.2)
+
+[INFO]   - Downloading symfony/http-foundation (v7.3.2)
+
+[INFO]   - Downloading symfony/error-handler (v7.3.2)
+
+[INFO]   - Downloading symfony/http-kernel (v7.3.2)
+
+[INFO]   - Downloading symfony/finder (v7.3.2)
+
+[INFO]   - Downloading symfony/polyfill-intl-grapheme (v1.32.0)
+
+[INFO]   - Downloading symfony/string (v7.3.2)
+
+[INFO]   - Downloading symfony/console (v7.3.2)
+
+[INFO]   - Downloading ramsey/collection (2.1.1)
+
+[INFO]   - Downloading brick/math (0.13.1)
+
+[INFO]   - Downloading ramsey/uuid (4.9.0)
+
+[INFO]   - Downloading psr/simple-cache (3.0.0)
+
+[INFO]   - Downloading nunomaduro/termwind (v2.3.1)
+
+[INFO]   - Downloading symfony/translation-contracts (v3.6.0)
+
+[INFO]   - Downloading symfony/translation (v7.3.2)
+
+[INFO]   - Downloading psr/clock (1.0.0)
+
+[INFO]   - Downloading symfony/clock (v7.3.0)
+
+[INFO]   - Downloading carbonphp/carbon-doctrine-types (3.2.0)
+
+[INFO]   - Downloading nesbot/carbon (3.10.2)
+
+[INFO]   - Downloading monolog/monolog (3.9.0)
+
+[INFO]   - Downloading psr/http-message (2.0)
+
+[INFO]   - Downloading psr/http-factory (1.1.0)
+
+[INFO]   - Downloading league/uri-interfaces (7.5.0)
+
+[INFO]   - Downloading league/uri (7.5.1)
+
+[INFO]   - Downloading league/mime-type-detection (1.16.0)
+
+[INFO]   - Downloading league/flysystem-local (3.30.0)
+
+[INFO]   - Downloading league/flysystem (3.30.0)
+
+[INFO]   - Downloading nette/utils (v4.0.8)
+
+[INFO]   - Downloading nette/schema (v1.3.2)
+
+[INFO]   - Downloading dflydev/dot-access-data (v3.0.3)
+
+[INFO]   - Downloading league/config (v1.2.0)
+
+[INFO]   - Downloading league/commonmark (2.7.1)
+
+[INFO]   - Downloading laravel/serializable-closure (v2.0.4)
+
+[INFO]   - Downloading laravel/prompts (v0.3.6)
+
+[INFO]   - Downloading guzzlehttp/uri-template (v1.0.4)
+
+[INFO]   - Downloading psr/http-client (1.0.3)
+
+[INFO]   - Downloading ralouphie/getallheaders (3.0.3)
+
+[INFO]   - Downloading guzzlehttp/psr7 (2.7.1)
+
+[INFO]   - Downloading guzzlehttp/promises (2.2.0)
+
+[INFO]   - Downloading guzzlehttp/guzzle (7.9.3)
+
+[INFO]   - Downloading fruitcake/php-cors (v1.3.0)
+
+[INFO]   - Downloading webmozart/assert (1.11.0)
+
+[INFO]   - Downloading dragonmantank/cron-expression (v3.4.0)
+
+[INFO]   - Downloading doctrine/inflector (2.1.0)
+
+[INFO]   - Downloading laravel/framework (v12.24.0)
+
+[INFO]   - Downloading cloudinary/transformation-builder-sdk (2.1.2)
+
+[INFO]   - Downloading cloudinary/cloudinary_php (3.1.1)
+
+[INFO]   - Downloading cloudinary-labs/cloudinary-laravel (3.0.1)
+
+[INFO]   - Downloading fakerphp/faker (v1.24.1)
+
+[INFO]   - Downloading intervention/gif (4.2.2)
+
+[INFO]   - Downloading intervention/image (3.11.4)
+
+[INFO]   - Downloading laravel/pail (v1.2.3)
+
+[INFO]   - Downloading laravel/pint (v1.24.0)
+
+[INFO]   - Downloading symfony/yaml (v7.3.2)
+
+[INFO]   - Downloading laravel/sail (v1.44.0)
+
+[INFO]   - Downloading nikic/php-parser (v5.6.1)
+
+[INFO]   - Downloading psy/psysh (v0.12.10)
+
+[INFO]   - Downloading laravel/tinker (v2.10.1)
+
+[INFO]   - Downloading hamcrest/hamcrest-php (v2.1.1)
+
+[INFO]   - Downloading mockery/mockery (1.6.12)
+
+[INFO]   - Downloading filp/whoops (2.18.4)
+
+[INFO]   - Downloading nunomaduro/collision (v8.8.2)
+
+[INFO]   - Downloading staabm/side-effects-detector (1.0.5)
+
+[INFO]   - Downloading sebastian/version (5.0.2)
+
+[INFO]   - Downloading sebastian/type (5.1.3)
+
+[INFO]   - Downloading sebastian/recursion-context (6.0.3)
+
+[INFO]   - Downloading sebastian/object-reflector (4.0.1)
+
+[INFO]   - Downloading sebastian/object-enumerator (6.0.1)
+
+[INFO]   - Downloading sebastian/global-state (7.0.2)
+
+[INFO]   - Downloading sebastian/exporter (6.3.0)
+
+[INFO]   - Downloading sebastian/environment (7.2.1)
+
+[INFO]   - Downloading sebastian/diff (6.0.2)
+
+[INFO]   - Downloading sebastian/comparator (6.3.2)
+
+[INFO]   - Downloading sebastian/code-unit (3.0.3)
+
+[INFO]   - Downloading sebastian/cli-parser (3.0.2)
+
+[INFO]   - Downloading phpunit/php-timer (7.0.1)
+
+[INFO]   - Downloading phpunit/php-text-template (4.0.1)
+
+[INFO]   - Downloading phpunit/php-invoker (5.0.1)
+
+[INFO]   - Downloading phpunit/php-file-iterator (5.1.0)
+
+[INFO]   - Downloading theseer/tokenizer (1.2.3)
+
+[INFO]   - Downloading sebastian/lines-of-code (3.0.1)
+
+[INFO]   - Downloading sebastian/complexity (4.0.1)
+
+[INFO]   - Downloading sebastian/code-unit-reverse-lookup (4.0.1)
+
+[INFO]   - Downloading phpunit/php-code-coverage (11.0.10)
+
+[INFO]   - Downloading phar-io/version (3.2.1)
+
+[INFO]   - Downloading phar-io/manifest (2.0.4)
+
+[INFO]   - Downloading myclabs/deep-copy (1.13.4)
+
+[INFO]   - Downloading phpunit/phpunit (11.5.33)
+
+[INFO]   - Downloading spatie/laravel-sluggable (3.7.5)
+
+[INFO]    0/118 [>---------------------------]   0%
+[INFO] 
+  17/118 [====>-----------------------]  14%
+[INFO] 
+  24/118 [=====>----------------------]  20%
+[INFO] 
+  38/118 [=========>------------------]  32%
+[INFO] 
+  52/118 [============>---------------]  44%
+[INFO] 
+  62/118 [==============>-------------]  52%
+[INFO] 
+  73/118 [=================>----------]  61%
+[INFO] 
+  85/118 [====================>-------]  72%
+[INFO] 
+  98/118 [=======================>----]  83%
+[INFO] 
+ 111/118 [==========================>-]  94%
+[INFO] 
+ 118/118 [============================] 100%
+
+[INFO]   - Installing voku/portable-ascii (2.0.3): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-php80 (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-mbstring (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-ctype (v1.32.0): Extracting archive
+
+[INFO]   - Installing phpoption/phpoption (1.9.3): Extracting archive
+
+[INFO]   - Installing graham-campbell/result-type (v1.1.3): Extracting archive
+
+[INFO]   - Installing vlucas/phpdotenv (v5.6.2): Extracting archive
+
+[INFO]   - Installing symfony/css-selector (v7.3.0): Extracting archive
+
+[INFO]   - Installing tijsverkoyen/css-to-inline-styles (v2.3.0): Extracting archive
+
+[INFO]   - Installing symfony/deprecation-contracts (v3.6.0): Extracting archive
+
+[INFO]   - Installing symfony/var-dumper (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-uuid (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/uid (v7.3.1): Extracting archive
+
+[INFO]   - Installing symfony/routing (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/process (v7.3.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-php85 (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-php84 (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-php83 (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-intl-normalizer (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-intl-idn (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/mime (v7.3.2): Extracting archive
+
+[INFO]   - Installing psr/container (2.0.2): Extracting archive
+
+[INFO]   - Installing symfony/service-contracts (v3.6.0): Extracting archive
+
+[INFO]   - Installing psr/event-dispatcher (1.0.0): Extracting archive
+
+[INFO]   - Installing symfony/event-dispatcher-contracts (v3.6.0): Extracting archive
+
+[INFO]   - Installing symfony/event-dispatcher (v7.3.0): Extracting archive
+
+[INFO]   - Installing psr/log (3.0.2): Extracting archive
+
+[INFO]   - Installing doctrine/lexer (3.0.1): Extracting archive
+
+[INFO]   - Installing egulias/email-validator (4.0.4): Extracting archive
+
+[INFO]   - Installing symfony/mailer (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/http-foundation (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/error-handler (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/http-kernel (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/finder (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/polyfill-intl-grapheme (v1.32.0): Extracting archive
+
+[INFO]   - Installing symfony/string (v7.3.2): Extracting archive
+
+[INFO]   - Installing symfony/console (v7.3.2): Extracting archive
+
+[INFO]   - Installing ramsey/collection (2.1.1): Extracting archive
+
+[INFO]   - Installing brick/math (0.13.1): Extracting archive
+
+[INFO]   - Installing ramsey/uuid (4.9.0): Extracting archive
+
+[INFO]   - Installing psr/simple-cache (3.0.0): Extracting archive
+
+[INFO]   - Installing nunomaduro/termwind (v2.3.1): Extracting archive
+
+[INFO]   - Installing symfony/translation-contracts (v3.6.0): Extracting archive
+
+[INFO]   - Installing symfony/translation (v7.3.2): Extracting archive
+
+[INFO]   - Installing psr/clock (1.0.0): Extracting archive
+
+[INFO]   - Installing symfony/clock (v7.3.0): Extracting archive
+
+[INFO]   - Installing carbonphp/carbon-doctrine-types (3.2.0): Extracting archive
+
+[INFO]   - Installing nesbot/carbon (3.10.2): Extracting archive
+
+[INFO]   - Installing monolog/monolog (3.9.0): Extracting archive
+
+[INFO]   - Installing psr/http-message (2.0): Extracting archive
+
+[INFO]   - Installing psr/http-factory (1.1.0): Extracting archive
+
+[INFO]   - Installing league/uri-interfaces (7.5.0): Extracting archive
+
+[INFO]   - Installing league/uri (7.5.1): Extracting archive
+
+[INFO]   - Installing league/mime-type-detection (1.16.0): Extracting archive
+
+[INFO]   - Installing league/flysystem-local (3.30.0): Extracting archive
+
+[INFO]   - Installing league/flysystem (3.30.0): Extracting archive
+
+[INFO]   - Installing nette/utils (v4.0.8): Extracting archive
+
+[INFO]   - Installing nette/schema (v1.3.2): Extracting archive
+
+[INFO]   - Installing dflydev/dot-access-data (v3.0.3): Extracting archive
+
+[INFO]   - Installing league/config (v1.2.0): Extracting archive
+
+[INFO]   - Installing league/commonmark (2.7.1): Extracting archive
+
+[INFO]   - Installing laravel/serializable-closure (v2.0.4): Extracting archive
+
+[INFO]   - Installing laravel/prompts (v0.3.6): Extracting archive
+
+[INFO]   - Installing guzzlehttp/uri-template (v1.0.4): Extracting archive
+
+[INFO]   - Installing psr/http-client (1.0.3): Extracting archive
+
+[INFO]   - Installing ralouphie/getallheaders (3.0.3): Extracting archive
+
+[INFO]   - Installing guzzlehttp/psr7 (2.7.1): Extracting archive
+
+[INFO]   - Installing guzzlehttp/promises (2.2.0): Extracting archive
+
+[INFO]   - Installing guzzlehttp/guzzle (7.9.3): Extracting archive
+
+[INFO]   - Installing fruitcake/php-cors (v1.3.0): Extracting archive
+
+[INFO]   - Installing webmozart/assert (1.11.0): Extracting archive
+
+[INFO]   - Installing dragonmantank/cron-expression (v3.4.0): Extracting archive
+
+[INFO]   - Installing doctrine/inflector (2.1.0): Extracting archive
+
+[INFO]   - Installing laravel/framework (v12.24.0): Extracting archive
+
+[INFO]   - Installing cloudinary/transformation-builder-sdk (2.1.2): Extracting archive
+
+[INFO]   - Installing cloudinary/cloudinary_php (3.1.1): Extracting archive
+
+[INFO]   - Installing cloudinary-labs/cloudinary-laravel (3.0.1): Extracting archive
+
+[INFO]   - Installing fakerphp/faker (v1.24.1): Extracting archive
+
+[INFO]   - Installing intervention/gif (4.2.2): Extracting archive
+
+[INFO]   - Installing intervention/image (3.11.4): Extracting archive
+
+[INFO]   - Installing laravel/pail (v1.2.3): Extracting archive
+
+[INFO]   - Installing laravel/pint (v1.24.0): Extracting archive
+
+[INFO]   - Installing symfony/yaml (v7.3.2): Extracting archive
+
+[INFO]   - Installing laravel/sail (v1.44.0): Extracting archive
+
+[INFO]   - Installing nikic/php-parser (v5.6.1): Extracting archive
+
+[INFO]   - Installing psy/psysh (v0.12.10): Extracting archive
+
+[INFO]   - Installing laravel/tinker (v2.10.1): Extracting archive
+
+[INFO]   - Installing hamcrest/hamcrest-php (v2.1.1): Extracting archive
+
+[INFO]   - Installing mockery/mockery (1.6.12): Extracting archive
+
+[INFO]   - Installing filp/whoops (2.18.4): Extracting archive
+
+[INFO]   - Installing nunomaduro/collision (v8.8.2): Extracting archive
+
+[INFO]   - Installing staabm/side-effects-detector (1.0.5): Extracting archive
+
+[INFO]   - Installing sebastian/version (5.0.2): Extracting archive
+
+[INFO]   - Installing sebastian/type (5.1.3): Extracting archive
+
+[INFO]   - Installing sebastian/recursion-context (6.0.3): Extracting archive
+
+[INFO]   - Installing sebastian/object-reflector (4.0.1): Extracting archive
+
+[INFO]   - Installing sebastian/object-enumerator (6.0.1): Extracting archive
+
+[INFO]   - Installing sebastian/global-state (7.0.2): Extracting archive
+
+[INFO]   - Installing sebastian/exporter (6.3.0): Extracting archive
+
+[INFO]   - Installing sebastian/environment (7.2.1): Extracting archive
+
+[INFO]   - Installing sebastian/diff (6.0.2): Extracting archive
+
+[INFO]   - Installing sebastian/comparator (6.3.2): Extracting archive
+
+[INFO]   - Installing sebastian/code-unit (3.0.3): Extracting archive
+
+[INFO]   - Installing sebastian/cli-parser (3.0.2): Extracting archive
+
+[INFO]   - Installing phpunit/php-timer (7.0.1): Extracting archive
+
+[INFO]   - Installing phpunit/php-text-template (4.0.1): Extracting archive
+
+[INFO]   - Installing phpunit/php-invoker (5.0.1): Extracting archive
+
+[INFO]   - Installing phpunit/php-file-iterator (5.1.0): Extracting archive
+
+[INFO]   - Installing theseer/tokenizer (1.2.3): Extracting archive
+
+[INFO]   - Installing sebastian/lines-of-code (3.0.1): Extracting archive
+
+[INFO]   - Installing sebastian/complexity (4.0.1): Extracting archive
+
+[INFO]   - Installing sebastian/code-unit-reverse-lookup (4.0.1): Extracting archive
+
+[INFO]   - Installing phpunit/php-code-coverage (11.0.10): Extracting archive
+
+[INFO]   - Installing phar-io/version (3.2.1): Extracting archive
+
+[INFO]   - Installing phar-io/manifest (2.0.4): Extracting archive
+
+[INFO]   - Installing myclabs/deep-copy (1.13.4): Extracting archive
+
+[INFO]   - Installing phpunit/phpunit (11.5.33): Extracting archive
+
+[INFO]   - Installing spatie/laravel-sluggable (3.7.5): Extracting archive
+
+[INFO]    0/118 [>---------------------------]   0%
+[INFO] 
+  30/118 [=======>--------------------]  25%
+[INFO] 
+  55/118 [=============>--------------]  46%
+[INFO] 
+  69/118 [================>-----------]  58%
+[INFO] 
+  85/118 [====================>-------]  72%
+[INFO] 
+ 100/118 [=======================>----]  84%
+[INFO] 
+ 117/118 [===========================>]  99%
+[INFO] 
+ 118/118 [============================] 100%
+[INFO] 
+
+[INFO] Generating optimized autoload files
+
+[INFO] composer install --optimize-autoloader --no-scripts --no-interaction
+[INFO] install apt packages: libatomic1
+[INFO] copy /app
+[INFO] Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+
+[INFO] Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+
+[INFO] Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+
+[INFO] Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8792 kB]
+
+[INFO] Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+
+[INFO] Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [297 kB]
+
+[INFO] copy /app
+[INFO] copy /mise/shims
+[INFO] copy /mise/shims
+[INFO] copy /mise/installs
+[INFO] Fetched 9350 kB in 1s (8716 kB/s)
+Reading package lists...
+[INFO] copy /mise/installs
+[INFO] copy /usr/local/bin/mise
+[INFO] 
+
+[INFO] Reading package lists...
+[INFO] copy /usr/local/bin/mise
+[INFO] copy /etc/mise/config.toml
+[INFO] copy /etc/mise/config.toml
+[INFO] copy /root/.local/state/mise
+[INFO] copy /root/.local/state/mise
+[INFO] copy / /app
+[INFO] copy / /app
+[INFO] npm run build
+[INFO] npm warn config production Use `--omit=dev` instead.
+
+[INFO] 
+> awais-portfolio@1.0.0 build
+> vite build
+
+
+[INFO] 
+
+[INFO] Building dependency tree...
+[INFO] 
+Reading state information...
+[INFO] 
+
+[INFO] libatomic1 is already the newest version (12.2.0-14+deb12u1).
+libatomic1 set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+
+[INFO] install apt packages: libatomic1
+[INFO] [36mvite v7.1.2 [32mbuilding for production...[36m[39m
+
+[INFO] transforming...
+
+[INFO] Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+[INFO] [32m✓[39m 60 modules transformed.
+
+[INFO] rendering chunks...
+
+[INFO] computing gzip size...
+
+[INFO] [2mpublic/build/[22m[32mmanifest.json                             [39m[1m[2m  1.47 kB[22m[1m[22m[2m │ gzip:  0.35 kB[22m
+[2mpublic/build/[22m[2massets/[22m[32mfa-v4compatibility-BHaDpj3C.woff2  [39m[1m[2m  4.13 kB[22m[1m[22m
+
+[INFO] [2mpublic/build/[22m[2massets/[22m[32mfa-regular-400-DdcaUAxu.woff2      [39m[1m[2m 18.89 kB[22m[1m[22m
+
+[INFO] [2mpublic/build/[22m[2massets/[22m[32mfa-brands-400-DFY6gyJh.woff2       [39m[1m[2m101.09 kB[22m[1m[22m
+
+[INFO] [2mpublic/build/[22m[2massets/[22m[32mfa-solid-900-BQpGBb1f.woff2        [39m[1m[2m113.11 kB[22m[1m[22m
+
+[INFO] [2mpublic/build/[22m[2massets/[22m[35mapp-CtL7gehS.css                   [39m[1m[2m191.97 kB[22m[1m[22m[2m │ gzip: 38.56 kB[22m
+
+[INFO] [2mpublic/build/[22m[2massets/[22m[36mapp-Cya2ZBT7.js                    [39m[1m[2m232.76 kB[22m[1m[22m[2m │ gzip: 81.57 kB[22m
+
+[INFO] [32m✓ built in 1.23s[39m
+
+[INFO] npm run build
+[INFO] mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache && chmod -R a+rw storage
+[INFO] mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache && chmod -R a+rw storage
+[INFO] php artisan config:cache
+[INFO] 
+   INFO  Configuration cached successfully.  
+
+
+[INFO] php artisan config:cache
+[INFO] php artisan event:cache
+[INFO] 
+   INFO  Events cached successfully.  
+
+
+[INFO] php artisan event:cache
+[INFO] php artisan route:cache
+[INFO] 
+   INFO  Routes cached successfully.  
+
+
+[INFO] php artisan route:cache
+[INFO] php artisan view:cache
+[INFO] 
+
+[INFO] 
+   INFO  Blade templates cached successfully.  
+
+
+[INFO] php artisan view:cache
+[INFO] copy /app
+[INFO] copy /app
+[INFO] [railpack] merge $packages:apt:runtime, $prune:node, $build
+[INFO] [railpack] merge $packages:apt:runtime, $prune:node, $build
+[INFO] [auth] sharing credentials for production-us-west2.railway-registry.com
+[INFO] [auth] sharing credentials for production-us-west2.railway-registry.com
+[INFO] importing to docker
+[INFO] importing to docker
+[92mBuild time: 74.96 seconds[0m

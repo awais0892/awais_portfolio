@@ -7,17 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')</title>
     <meta name="description"
-        content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
+        content="@yield('description', $settings['site_description'] ?? 'Awais Ahmad is a Professional Software Engineer specializing in Laravel and the MERN stack. View his portfolio for innovative web solutions and tech blog.')">
+    <meta name="keywords"
+        content="Awais Ahmad, Software Engineer, Laravel Developer, MERN Stack, Full-Stack Developer, UK Developer, AI MSc">
 
     <!-- Open Graph / Twitter Meta -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')">
-    <meta property="og:description" content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
+    <meta property="og:title"
+        content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad | Professional Software Engineer')">
+    <meta property="og:description"
+        content="@yield('description', $settings['site_description'] ?? 'Explore the professional portfolio of Awais Ahmad, showcasing high-impact web applications built with Laravel and React.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('assets/awais-formal.jpg') }}">
+    <meta property="og:site_name" content="Awais Ahmad Portfolio">
+
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')">
-    <meta name="twitter:description" content="@yield('description', $settings['site_description'] ?? 'Portfolio of Awais Ahmad')">
+    <meta name="twitter:title"
+        content="@yield('title', $settings['site_title'] ?? 'Awais Ahmad | Professional Software Engineer')">
+    <meta name="twitter:description"
+        content="@yield('description', $settings['site_description'] ?? 'Professional Software Engineer portfolio specializing in Laravel and MERN stack.')">
     <meta name="twitter:image" content="{{ asset('assets/awais-formal.jpg') }}">
 
     <!-- Favicon -->

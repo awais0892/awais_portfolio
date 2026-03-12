@@ -15,7 +15,7 @@ class ExperiencesSeeder extends Seeder
                 'title' => 'Software Engineer',
                 'company' => 'Pixako Technologies',
                 'location' => 'Islamabad',
-                'start_date' => '2023-09-01',
+                'start_date' => '2024-09-01',
                 'end_date' => null,
                 'is_current' => true,
                 'description' => 'Working as a full-stack developer specializing in Laravel and MERN stack technologies. Contributing to various high-impact projects including government applications and e-commerce platforms.',
@@ -28,7 +28,8 @@ class ExperiencesSeeder extends Seeder
                     'Collaborated with cross-functional teams to improve task delivery timelines and streamline workflows by 20%.'
                 ],
                 'technologies' => ['Laravel', 'MERN Stack', 'React.js', 'Node.js', 'WordPress', 'DomPDF', 'XML'],
-                'order' => 1
+                'order' => 1,
+                'is_active' => true
             ]
         ];
 
