@@ -134,13 +134,14 @@
 
             // Upload file
             const uploadUrl = fileType === 'image'
-                ? '/api/upload/image'
-                : '/api/upload/document';
+                ? '{{ route('api.upload.image') }}'
+                : '{{ route('api.upload.document') }}';
 
             fetch(uploadUrl, {
                 method: 'POST',
                 body: formData,
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
@@ -153,7 +154,8 @@
                         addFileToList(data.data);
                         // Trigger custom event for parent components
                         component.dispatchEvent(new CustomEvent('fileUploaded', {
-                            detail: data.data
+                            detail: data.data,
+                            bubbles: true
                         }));
                     } else {
                         console.error('Validation Errors:', data.errors);
@@ -237,6 +239,7 @@
 
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4';
+            fileItem.dataset.publicId = fileData.public_id;
             fileItem.innerHTML = `
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -256,11 +259,11 @@
                        class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-lg hover:bg-cyan-500/30 transition-colors text-sm">
                         <i class="fas fa-external-link-alt mr-1"></i>View
                     </a>
-                    <button onclick="copyToClipboard('${fileData.secure_url}')" 
+                    <button onclick="copyToClipboard{{ ucfirst($type ?? 'image') }}('${fileData.secure_url}')" 
                             class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors text-sm">
                         <i class="fas fa-copy mr-1"></i>Copy URL
                     </button>
-                    <button onclick="deleteFile('${fileData.public_id}')" 
+                    <button onclick="deleteFile{{ ucfirst($type ?? 'image') }}('${fileData.public_id}')" 
                             class="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
                         <i class="fas fa-trash mr-1"></i>Delete
                     </button>
@@ -280,7 +283,7 @@
         }
 
         // Global functions for file actions
-        window.copyToClipboard = function (url) {
+        window.copyToClipboard{{ ucfirst($type ?? 'image') }} = function (url) {
             navigator.clipboard.writeText(url).then(() => {
                 showSuccess('URL copied to clipboard!');
             }).catch(() => {
@@ -288,11 +291,12 @@
             });
         };
 
-        window.deleteFile = function (publicId) {
+        window.deleteFile{{ ucfirst($type ?? 'image') }} = function (publicId) {
             if (confirm('Are you sure you want to delete this file?')) {
-                fetch('/api/upload/delete', {
+                fetch('{{ route('api.upload.delete') }}', {
                     method: 'DELETE',
                     headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
@@ -305,10 +309,9 @@
                     .then(data => {
                         if (data.success) {
                             showSuccess('File deleted successfully');
-                            // Remove from list
                             const fileItems = filesList.querySelectorAll('.file-item');
                             fileItems.forEach(item => {
-                                if (item.innerHTML.includes(publicId)) {
+                                if (item.dataset.publicId === publicId) {
                                     item.remove();
                                 }
                             });

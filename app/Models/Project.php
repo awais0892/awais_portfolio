@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -45,9 +46,18 @@ class Project extends Model
         return $query->orderBy('order')->orderBy('created_at', 'desc');
     }
 
-    public function getImageUrlAttribute()
+    public function getDisplayImageUrlAttribute(): string
     {
-        // Prefer explicit URLs if present on the model (use raw to avoid recursion)
+        if ($this->image) {
+            if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+                return $this->image;
+            }
+
+            if (Storage::disk('public')->exists($this->image)) {
+                return asset('storage/' . $this->image);
+            }
+        }
+
         $explicit = $this->getRawOriginal('image_url') ?? ($this->attributes['image_url'] ?? null);
         if (!empty($explicit)) {
             return $explicit;
@@ -57,18 +67,7 @@ class Project extends Model
         if (!empty($fallback)) {
             return $fallback;
         }
-        
-        // Use the existing image field if available
-        if ($this->image) {
-            // Check if image is a URL or local path
-            if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-                return $this->image; // Return URL directly
-            } else {
-                return asset('storage/' . $this->image); // Treat as local path
-            }
-        }
-        
-        // Return a default image
-        return 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop&crop=center';
+
+        return asset('assets/project-placeholder.svg');
     }
 }

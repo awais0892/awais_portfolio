@@ -13,6 +13,12 @@ class AdminMiddleware
     {
         // Require an authenticated user for admin routes
         if (! $request->user()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Unauthenticated.',
+                ], 401);
+            }
+
             return redirect()->route('admin.login');
         }
 

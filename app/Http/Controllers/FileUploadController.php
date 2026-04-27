@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class FileUploadController extends Controller
 {
+    protected function hasLocalFile(string $publicId): bool
+    {
+        return Storage::disk('public')->exists($publicId);
+    }
+
     /**
      * Upload image to Cloudinary
      */
@@ -177,8 +182,16 @@ class FileUploadController extends Controller
         }
 
         try {
-            if (config('cloudinary.cloud_url') && !str_starts_with($request->public_id, 'portfolio/')) {
-                // Typical Cloudinary ID or if Cloudinary is forced
+            if ($this->hasLocalFile($request->public_id)) {
+                Storage::disk('public')->delete($request->public_id);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'File deleted successfully from local storage'
+                ]);
+            }
+
+            if (config('cloudinary.cloud_url')) {
                 $resourceType = $request->resource_type ?? 'image';
                 $result = Cloudinary::destroy($request->public_id, [
                     'resource_type' => $resourceType
@@ -189,22 +202,12 @@ class FileUploadController extends Controller
                     'message' => 'File deleted successfully from Cloudinary',
                     'data' => $result
                 ]);
-            } else {
-                // Fallback to delete from local disk if public_id looks like our local path
-                // Also handles the case when CLOUDINARY_URL is not set entirely
-                if (Storage::disk('public')->exists($request->public_id)) {
-                    Storage::disk('public')->delete($request->public_id);
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'File deleted successfully from local storage'
-                    ]);
-                }
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'File not found in local storage'
-                ], 404);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
 
         } catch (\Exception $e) {
             \Log::error('File deletion failed: ' . $e->getMessage());
@@ -235,6 +238,21 @@ class FileUploadController extends Controller
         }
 
         try {
+            if ($this->hasLocalFile($request->public_id)) {
+                $url = asset('storage/' . $request->public_id);
+                $size = Storage::disk('public')->size($request->public_id);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'public_id' => $request->public_id,
+                        'secure_url' => $url,
+                        'url' => $url,
+                        'bytes' => $size
+                    ]
+                ]);
+            }
+
             if (config('cloudinary.cloud_url')) {
                 $resourceType = $request->resource_type ?? 'image';
 
@@ -246,27 +264,12 @@ class FileUploadController extends Controller
                     'success' => true,
                     'data' => $result
                 ]);
-            } else {
-                // Local Fallback
-                if (Storage::disk('public')->exists($request->public_id)) {
-                    $url = asset('storage/' . $request->public_id);
-                    $size = Storage::disk('public')->size($request->public_id);
-                    return response()->json([
-                        'success' => true,
-                        'data' => [
-                            'public_id' => $request->public_id,
-                            'secure_url' => $url,
-                            'url' => $url,
-                            'bytes' => $size
-                        ]
-                    ]);
-                }
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'File not found locally'
-                ], 404);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
 
         } catch (\Exception $e) {
             \Log::error('Get file info failed: ' . $e->getMessage());
@@ -300,6 +303,18 @@ class FileUploadController extends Controller
         }
 
         try {
+            if ($this->hasLocalFile($request->public_id)) {
+                $url = asset('storage/' . $request->public_id);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'url' => $url,
+                        'transformations' => []
+                    ]
+                ]);
+            }
+
             if (config('cloudinary.cloud_url')) {
                 $transformations = [];
 
@@ -323,17 +338,12 @@ class FileUploadController extends Controller
                         'transformations' => $transformations
                     ]
                 ]);
-            } else {
-                // Return original local image URL, ignoring transformations
-                $url = asset('storage/' . $request->public_id);
-                return response()->json([
-                    'success' => true,
-                    'data' => [
-                        'url' => $url,
-                        'transformations' => []
-                    ]
-                ]);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
 
         } catch (\Exception $e) {
             \Log::error('Image transformation failed: ' . $e->getMessage());

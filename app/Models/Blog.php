@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -234,23 +235,29 @@ class Blog extends Model
     // Static methods
     public static function getCategories()
     {
-        return static::distinct()->pluck('category')->filter()->values();
+        return Cache::remember('blog_categories', 3600, function () {
+            return static::distinct()->pluck('category')->filter()->values();
+        });
     }
 
     public static function getPopularPosts($limit = 5)
     {
-        return static::published()
-            ->orderBy('views', 'desc')
-            ->limit($limit)
-            ->get();
+        return Cache::remember('blog_popular_posts_' . $limit, 1800, function () use ($limit) {
+            return static::published()
+                ->orderBy('views', 'desc')
+                ->limit($limit)
+                ->get();
+        });
     }
 
     public static function getRecentPosts($limit = 5)
     {
-        return static::published()
-            ->orderBy('published_at', 'desc')
-            ->limit($limit)
-            ->get();
+        return Cache::remember('blog_recent_posts_' . $limit, 1800, function () use ($limit) {
+            return static::published()
+                ->orderBy('published_at', 'desc')
+                ->limit($limit)
+                ->get();
+        });
     }
 
     // Relationships

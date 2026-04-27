@@ -3,9 +3,13 @@
     // Particle animation script
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const enableAmbientMotion = !prefersReducedMotion.matches;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     let particlesArray;
+    let particleAnimationFrame = null;
 
     // get mouse position
     let mouse = {
@@ -54,7 +58,7 @@
     function init() {
         particlesArray = [];
         // Reduce particle count for performance
-        let numberOfParticles = (canvas.height * canvas.width) / 15000;
+        let numberOfParticles = (canvas.height * canvas.width) / 22000;
         for (let i = 0; i < numberOfParticles; i++) {
             let size = (Math.random() * 1.5) + 0.5;
             let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
@@ -68,7 +72,7 @@
 
     // animation loop
     function animate() {
-        requestAnimationFrame(animate);
+        particleAnimationFrame = requestAnimationFrame(animate);
         ctx.clearRect(0, 0, innerWidth, innerHeight);
 
         for (let i = 0; i < particlesArray.length; i++) {
@@ -113,304 +117,297 @@
         mouse.y = undefined;
     });
 
-    init();
-    animate();
+    if (enableAmbientMotion) {
+        init();
+        animate();
+    } else {
+        canvas.style.display = 'none';
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (!enableAmbientMotion) return;
+
+        if (document.hidden && particleAnimationFrame) {
+            cancelAnimationFrame(particleAnimationFrame);
+            particleAnimationFrame = null;
+            return;
+        }
+
+        if (!document.hidden && !particleAnimationFrame) {
+            animate();
+        }
+    });
 
     // GSAP Animations (plugins already registered in app.js)
 
     document.addEventListener("DOMContentLoaded", function () {
+        const reduceMotion = prefersReducedMotion.matches;
+
         try {
-            // Cyberpunk-inspired reveal animations
-            const revealElements = document.querySelectorAll(".gsap-reveal");
+            if (!reduceMotion) {
+                const revealElements = document.querySelectorAll(".gsap-reveal");
 
-            if (revealElements.length > 0) {
-                revealElements.forEach((el, index) => {
-                    const delay = el.dataset.gsapDelay ? parseFloat(el.dataset.gsapDelay) : 0;
+                if (revealElements.length > 0) {
+                    revealElements.forEach((el) => {
+                        const delay = el.dataset.gsapDelay ? parseFloat(el.dataset.gsapDelay) : 0;
 
-                    gsap.fromTo(el, {
+                        gsap.fromTo(el, {
+                            opacity: 0,
+                            y: 30,
+                            scale: 0.95
+                        }, {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            duration: 0.5,
+                            delay: delay,
+                            ease: "power2.out",
+                            force3D: true,
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 92%",
+                                once: true
+                            }
+                        });
+                    });
+                }
+
+                const skillItems = document.querySelectorAll("#skills .gsap-reveal");
+                if (skillItems.length > 0) {
+                    gsap.fromTo(skillItems, {
                         opacity: 0,
-                        y: 30,
+                        y: 20,
+                        scale: 0.9
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.4,
+                        stagger: 0.03,
+                        ease: "power2.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: "#skills",
+                            start: "top 90%",
+                            once: true
+                        }
+                    });
+                }
+
+                const heroElements = document.querySelectorAll("#home .gsap-reveal");
+                if (heroElements.length > 0) {
+                    gsap.fromTo(heroElements, {
+                        opacity: 0,
+                        y: 40,
+                        scale: 0.95
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.6,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                        force3D: true
+                    });
+                }
+
+                const projectCards = document.querySelectorAll("#projects .gsap-reveal");
+                if (projectCards.length > 0) {
+                    gsap.fromTo(projectCards, {
+                        opacity: 0,
+                        y: 40,
                         scale: 0.95
                     }, {
                         opacity: 1,
                         y: 0,
                         scale: 1,
                         duration: 0.5,
-                        delay: delay,
+                        stagger: 0.08,
                         ease: "power2.out",
                         force3D: true,
                         scrollTrigger: {
-                            trigger: el,
-                            start: "top 92%",
-                            once: true
-                        }
-                    });
-                });
-            }
-
-            // Skill icons optimized
-            const skillItems = document.querySelectorAll("#skills .gsap-reveal");
-            if (skillItems.length > 0) {
-                gsap.fromTo(skillItems, {
-                    opacity: 0,
-                    y: 20,
-                    scale: 0.9
-                }, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.4,
-                    stagger: 0.03,
-                    ease: "power2.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: "#skills",
-                        start: "top 90%",
-                        once: true
-                    }
-                });
-            }
-
-            // Hero section optimized
-            const heroElements = document.querySelectorAll("#home .gsap-reveal");
-            if (heroElements.length > 0) {
-                gsap.fromTo(heroElements, {
-                    opacity: 0,
-                    y: 40,
-                    scale: 0.95
-                }, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.6,
-                    stagger: 0.1,
-                    ease: "power2.out",
-                    force3D: true
-                });
-            }
-
-            // Project cards optimized
-            const projectCards = document.querySelectorAll("#projects .gsap-reveal");
-            if (projectCards.length > 0) {
-                gsap.fromTo(projectCards, {
-                    opacity: 0,
-                    y: 40,
-                    scale: 0.95
-                }, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.5,
-                    stagger: 0.08,
-                    ease: "power2.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: "#projects",
-                        start: "top 90%",
-                        once: true
-                    }
-                });
-            }
-
-            // Experience cards optimized
-            const expCards = document.querySelectorAll("#experience .gsap-reveal, #education .gsap-reveal");
-            if (expCards.length > 0) {
-                gsap.fromTo(expCards, {
-                    opacity: 0,
-                    x: -30
-                }, {
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.5,
-                    stagger: 0.1,
-                    ease: "power2.out",
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: expCards[0].closest('section'),
-                        start: "top 90%",
-                        once: true
-                    }
-                });
-            }
-
-            // Floating animation for hero section
-            const heroSection = document.querySelector("#home");
-            if (heroSection) {
-                gsap.to(heroSection, {
-                    y: -20,
-                    duration: 4,
-                    ease: "power2.inOut",
-                    yoyo: true,
-                    repeat: -1
-                });
-            }
-
-            // Hover animations for buttons and cards
-            const interactiveElements = document.querySelectorAll('.glow-button, .glass-card, .skill-icon');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    gsap.to(el, {
-                        scale: 1.05,
-                        duration: 0.3,
-                        ease: "power2.out"
-                    });
-                });
-
-                el.addEventListener('mouseleave', () => {
-                    gsap.to(el, {
-                        scale: 1,
-                        duration: 0.3,
-                        ease: "power2.out"
-                    });
-                });
-            });
-
-            // Subtle parallax effect for background elements
-            const backgroundElements = document.querySelectorAll('.glass-card');
-            backgroundElements.forEach(el => {
-                gsap.to(el, {
-                    y: -10,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
-            });
-
-            // Contact form animations - Optimized for speed
-            const contactForm = document.querySelector('#contact-form');
-            if (contactForm) {
-                const formInputs = contactForm.querySelectorAll('input, textarea');
-                formInputs.forEach((input, index) => {
-                    gsap.fromTo(input, {
-                        opacity: 0,
-                        x: -20
-                    }, {
-                        opacity: 1,
-                        x: 0,
-                        duration: 0.2,
-                        delay: 0.02 * index,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: input,
+                            trigger: "#projects",
                             start: "top 90%",
                             once: true
                         }
                     });
-                });
-            }
+                }
 
-            // Smooth scroll animations for navigation links
-            const navLinks = document.querySelectorAll('a[href^="#"]');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-
-                    if (targetElement) {
-                        gsap.to(window, {
-                            duration: 1.5,
-                            scrollTo: {
-                                y: targetElement,
-                                offsetY: 80
-                            },
-                            ease: "power2.inOut"
-                        });
-                    }
-                });
-            });
-
-            // Text reveal animation for headings
-            const headings = document.querySelectorAll('h1, h2, h3');
-            headings.forEach(heading => {
-                if (heading.textContent.length > 20) {
-                    gsap.fromTo(heading, {
+                const expCards = document.querySelectorAll("#experience .gsap-reveal, #education .gsap-reveal");
+                if (expCards.length > 0) {
+                    gsap.fromTo(expCards, {
                         opacity: 0,
-                        y: 30
+                        x: -30
                     }, {
                         opacity: 1,
-                        y: 0,
-                        duration: 0.8,
+                        x: 0,
+                        duration: 0.5,
+                        stagger: 0.1,
                         ease: "power2.out",
+                        force3D: true,
                         scrollTrigger: {
-                            trigger: heading,
-                            start: "top 85%",
+                            trigger: expCards[0].closest('section'),
+                            start: "top 90%",
                             once: true
                         }
                     });
                 }
-            });
 
-            // Typing effect for hero title
-            const heroTitle = document.querySelector('#home h1');
-            if (heroTitle) {
-                const text = heroTitle.textContent;
-                heroTitle.innerHTML = '';
+                if (finePointer) {
+                    const interactiveElements = document.querySelectorAll('.glow-button, .glass-card, .skill-icon');
+                    interactiveElements.forEach(el => {
+                        el.addEventListener('mouseenter', () => {
+                            gsap.to(el, {
+                                scale: 1.05,
+                                duration: 0.3,
+                                ease: "power2.out"
+                            });
+                        });
 
-                // Create a span for each character
-                text.split('').forEach((char, index) => {
-                    const span = document.createElement('span');
-                    span.textContent = char === ' ' ? '\u00A0' : char;
-                    span.style.opacity = '0';
-                    span.style.transform = 'translateY(20px)';
-                    heroTitle.appendChild(span);
-
-                    // Animate each character
-                    gsap.to(span, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.1,
-                        delay: 0.5 + (index * 0.05),
-                        ease: "power2.out"
+                        el.addEventListener('mouseleave', () => {
+                            gsap.to(el, {
+                                scale: 1,
+                                duration: 0.3,
+                                ease: "power2.out"
+                            });
+                        });
                     });
-                });
-            }
+                }
 
-            // Enhanced particle system with GSAP
-            const particleCanvas = document.getElementById('particle-canvas');
-            if (particleCanvas) {
-                // Add mouse interaction to particles - optimized
-                particleCanvas.addEventListener('mousemove', (e) => {
-                    const rect = particleCanvas.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    // Simplified effect
-                    gsap.to(particleCanvas, {
-                        duration: 0.5,
-                        scale: 1.01,
-                        ease: "power1.out",
-                        overwrite: "auto"
+                const backgroundElements = document.querySelectorAll('.glass-card');
+                backgroundElements.forEach(el => {
+                    gsap.to(el, {
+                        y: -10,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
                     });
                 });
 
-                // Add scroll-based particle density
-                gsap.to(particleCanvas, {
-                    opacity: 0.3,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: "body",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: true
+                const contactForm = document.querySelector('#contact-form');
+                if (contactForm) {
+                    const formInputs = contactForm.querySelectorAll('input, textarea');
+                    formInputs.forEach((input, index) => {
+                        gsap.fromTo(input, {
+                            opacity: 0,
+                            x: -20
+                        }, {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.2,
+                            delay: 0.02 * index,
+                            ease: "power2.out",
+                            scrollTrigger: {
+                                trigger: input,
+                                start: "top 90%",
+                                once: true
+                            }
+                        });
+                    });
+                }
+
+                const navLinks = document.querySelectorAll('a[href^="#"]');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+
+                        if (targetElement) {
+                            gsap.to(window, {
+                                duration: 1.5,
+                                scrollTo: {
+                                    y: targetElement,
+                                    offsetY: 80
+                                },
+                                ease: "power2.inOut"
+                            });
+                        }
+                    });
+                });
+
+                const headings = document.querySelectorAll('h1, h2, h3');
+                headings.forEach(heading => {
+                    if (heading.textContent.length > 20) {
+                        gsap.fromTo(heading, {
+                            opacity: 0,
+                            y: 30
+                        }, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.8,
+                            ease: "power2.out",
+                            scrollTrigger: {
+                                trigger: heading,
+                                start: "top 85%",
+                                once: true
+                            }
+                        });
                     }
+                });
+
+                const heroTitle = document.querySelector('#home h1');
+                if (heroTitle) {
+                    const text = heroTitle.textContent;
+                    heroTitle.innerHTML = '';
+
+                    text.split('').forEach((char, index) => {
+                        const span = document.createElement('span');
+                        span.textContent = char === ' ' ? '\u00A0' : char;
+                        span.style.opacity = '0';
+                        span.style.transform = 'translateY(20px)';
+                        heroTitle.appendChild(span);
+
+                        gsap.to(span, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.1,
+                            delay: 0.5 + (index * 0.05),
+                            ease: "power2.out"
+                        });
+                    });
+                }
+
+                const particleCanvas = document.getElementById('particle-canvas');
+                if (particleCanvas && finePointer) {
+                    particleCanvas.addEventListener('mousemove', () => {
+                        gsap.to(particleCanvas, {
+                            duration: 0.5,
+                            scale: 1.01,
+                            ease: "power1.out",
+                            overwrite: "auto"
+                        });
+                    });
+
+                    gsap.to(particleCanvas, {
+                        opacity: 0.3,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: "body",
+                            start: "top top",
+                            end: "bottom bottom",
+                            scrub: true
+                        }
+                    });
+                }
+            } else {
+                document.querySelectorAll('.gsap-reveal').forEach((element) => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'none';
                 });
             }
         } catch (error) {
             console.error("GSAP animation error:", error);
         }
 
-        // Initialize Choices.js immediately and with delays to counter various race conditions
         initializeChoices();
-        setTimeout(initializeChoices, 100);
-        setTimeout(initializeChoices, 500);
-        setTimeout(initializeChoices, 1000);
-        setTimeout(initializeChoices, 2000);
     });
+
+    window.addEventListener('load', initializeChoices, { once: true });
 
     function initializeChoices() {
         if (typeof Choices === 'undefined') return;

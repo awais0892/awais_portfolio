@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Project Placeholder</title>
+  <desc id="desc">Abstract placeholder artwork for a project without a preview image.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="55%" stop-color="#111f3a" />
+      <stop offset="100%" stop-color="#1d2b4f" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#67e8f9" />
+      <stop offset="100%" stop-color="#a78bfa" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)" />
+  <g opacity="0.22">
+    <circle cx="200" cy="180" r="160" fill="#22d3ee" />
+    <circle cx="1040" cy="560" r="190" fill="#8b5cf6" />
+    <circle cx="820" cy="140" r="110" fill="#38bdf8" />
+  </g>
+  <g fill="none" stroke="url(#accent)" stroke-width="18" opacity="0.7">
+    <rect x="156" y="136" width="888" height="448" rx="28" />
+    <path d="M218 488 430 332l138 110 170-160 244 206" />
+  </g>
+  <g fill="url(#accent)">
+    <circle cx="332" cy="250" r="42" />
+  </g>
+</svg>

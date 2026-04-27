@@ -5,6 +5,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class SiteSetting extends Model
 {
@@ -14,16 +16,22 @@ class SiteSetting extends Model
 
     public static function get($key, $default = null)
     {
-        $setting = self::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        return Cache::remember("site_setting:{$key}", 3600, function () use ($key, $default) {
+            $setting = self::where('key', $key)->first();
+            return $setting ? $setting->value : $default;
+        });
     }
 
     public static function set($key, $value, $type = 'text', $group = 'general', $label = null, $description = null)
     {
-        return self::updateOrCreate(
+        $setting = self::updateOrCreate(
             ['key' => $key],
             ['value' => $value, 'type' => $type, 'group' => $group, 'label' => $label, 'description' => $description]
         );
+
+        Cache::forget("site_setting:{$key}");
+
+        return $setting;
     }
 
     public function getValueAttribute($value)
@@ -44,7 +52,18 @@ class SiteSetting extends Model
     {
         switch ($this->type) {
             case 'json':
-                $this->attributes['value'] = json_encode($value);
+                if (is_array($value) || is_object($value)) {
+                    $this->attributes['value'] = json_encode($value);
+                } elseif (is_string($value)) {
+                    $decodedValue = json_decode($value, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $this->attributes['value'] = $value;
+                    } else {
+                        $this->attributes['value'] = json_encode($value);
+                    }
+                } else {
+                    $this->attributes['value'] = json_encode($value);
+                }
                 break;
             case 'boolean':
                 $this->attributes['value'] = (int) $value;
@@ -63,7 +82,7 @@ class SiteSetting extends Model
             case 'boolean':
                 return $this->value ? 'Yes' : 'No';
             case 'image':
-                return $this->value ? asset('storage/' . $this->value) : 'No image';
+                return $this->value ? Storage::disk('public')->url($this->value) : 'No image';
             case 'json':
                 return is_array($this->value) ? json_encode($this->value, JSON_PRETTY_PRINT) : $this->value;
             default:

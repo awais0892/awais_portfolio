@@ -1,53 +1,198 @@
 @extends('layouts.app')
 
-@section('title', 'Blog - Awais Ahmad')
-@section('page-title', 'Blog')
+@section('title', 'Blog | Awais Ahmad')
+@section('description', 'Explore insights, tutorials, and thoughts on web development, design, and technology by Awais Ahmad.')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-    <!-- Animated Background Elements -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
-    </div>
+    <section class="relative py-20">
+        <div class="mx-auto max-w-6xl">
+            <div class="mb-14 max-w-3xl">
+                <p class="text-sm uppercase tracking-[0.28em] text-cyan-300/70 gsap-reveal">Latest Insights</p>
+                <h1 class="mt-4 text-balance text-5xl font-orbitron text-white gsap-reveal sm:text-6xl">
+                    Thoughts on Code, Design & Technology
+                </h1>
+                <p class="mt-5 max-w-2xl text-pretty text-lg leading-8 text-slate-300 gsap-reveal" data-gsap-delay="0.08">
+                    A collection of articles, tutorials, and insights covering web development, software engineering,
+                    and the latest trends in technology.
+                </p>
+            </div>
 
-    <!-- Grid Pattern Overlay -->
-    <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-
-    <!-- Content Container -->
-    <div class="relative z-10 container mx-auto px-4 py-8">
-        <!-- Header Section -->
-        <div class="text-center mb-12">
-            <h1 class="text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
-                Latest Blog Posts
-            </h1>
-            <p class="text-xl text-cyan-200/80 max-w-2xl mx-auto">
-                Explore insights, tutorials, and thoughts on web development, design, and technology
-            </p>
-        </div>
-
-        <!-- Search and Filter Section -->
-        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-4">
-                <!-- Search Input -->
-                <div class="flex-1">
-                    <form action="{{ route('blog.search') }}" method="GET" class="relative">
-                        <input type="text" name="q" placeholder="Search blog posts..." 
-                               value="{{ request('q') }}"
-                               class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white placeholder-cyan-300/50 focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 text-lg">
-                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors">
-                            <i class="fas fa-search text-xl"></i>
-                        </button>
+            <!-- Search and Filter Section -->
+            <div class="glass-card mb-12 rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-6 gsap-reveal" data-gsap-delay="0.16">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center">
+                    <!-- Search Form -->
+                    <form action="{{ route('blog.search') }}" method="GET" class="flex-1">
+                        <div class="relative">
+                            <input type="text" name="search" placeholder="Search articles..."
+                                   value="{{ request('search', request('q')) }}"
+                                   class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 pl-12 text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        </div>
                     </form>
+
+                    <!-- Category Filter -->
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ route('blog.index') }}"
+                           class="rounded-2xl px-4 py-2 text-sm font-medium transition-colors {{ !request('category') ? 'bg-cyan-400 text-slate-950' : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10' }}">
+                            All Posts
+                        </a>
+                        @foreach($categories ?? [] as $category)
+                            <a href="{{ route('blog.index', ['category' => $category]) }}"
+                               class="rounded-2xl px-4 py-2 text-sm font-medium transition-colors {{ request('category') === $category ? 'bg-cyan-400 text-slate-950' : 'border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10' }}">
+                                {{ $category }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            @if($blogs->count())
+                <!-- Blog Posts Grid -->
+                <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach($blogs as $post)
+                        <article class="glass-card gsap-reveal overflow-hidden rounded-[1.75rem] border border-white/10 bg-slate-950/55"
+                                data-gsap-delay="{{ ($loop->index % 6) * 0.06 }}">
+                            <a href="{{ route('blog.show', $post->slug) }}" class="block">
+                                <div class="aspect-video overflow-hidden">
+                                    <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}"
+                                        class="h-full w-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
+                                </div>
+                            </a>
+                            <div class="p-6">
+                                <div class="mb-4 flex flex-wrap items-center gap-2">
+                                    @if($post->category)
+                                        <span class="rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-semibold text-cyan-200">
+                                            {{ $post->category }}
+                                        </span>
+                                    @endif
+                                    <span class="rounded-full bg-slate-700/70 px-3 py-1 text-xs font-semibold text-slate-200">
+                                        {{ $post->read_time }}
+                                    </span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h2 class="text-xl font-orbitron text-white hover:text-cyan-400 transition-colors">
+                                        <a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
+                                    </h2>
+                                    <p class="mt-2 text-sm leading-6 text-slate-300">
+                                        {{ $post->excerpt }}
+                                    </p>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3 text-sm text-slate-400">
+                                        <span>{{ $post->formatted_published_date }}</span>
+                                        <span>•</span>
+                                        <span>{{ $post->author }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-sm text-slate-400">
+                                        <i class="fa-solid fa-eye"></i>
+                                        <span>{{ number_format($post->views) }}</span>
+                                    </div>
+                                </div>
+
+                                @if($post->tags && count($post->tags) > 0)
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        @foreach(array_slice($post->tags, 0, 3) as $tag)
+                                            <a href="{{ route('blog.tag', $tag) }}"
+                                               class="rounded-full bg-slate-800/70 px-3 py-1 text-xs text-slate-300 hover:bg-slate-700 transition-colors">
+                                                #{{ $tag }}
+                                            </a>
+                                        @endforeach
+                                        @if(count($post->tags) > 3)
+                                            <span class="rounded-full bg-slate-800/70 px-3 py-1 text-xs text-slate-300">
+                                                +{{ count($post->tags) - 3 }} more
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </article>
+                    @endforeach
                 </div>
 
-                <!-- Category Filter -->
-                <div class="flex gap-3">
-                    <select name="category" onchange="window.location.href=this.value" 
-                            class="bg-white/10 border border-white/20 rounded-xl px-4 py-4 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
-                        <option value="{{ route('blog.index') }}">All Categories</option>
-                        @foreach($categories ?? [] as $category)
+                <!-- Pagination -->
+                <div class="mt-12 flex justify-center gsap-reveal" data-gsap-delay="0.24">
+                    {{ $blogs->links() }}
+                </div>
+            @else
+                <!-- No Posts Found -->
+                <div class="glass-card rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-12 text-center gsap-reveal" data-gsap-delay="0.16">
+                    <i class="fa-solid fa-newspaper text-6xl text-slate-600 mb-6"></i>
+                    <h3 class="text-2xl font-orbitron text-white mb-4">No Articles Found</h3>
+                    <p class="text-slate-400 mb-6">We couldn't find any blog posts matching your criteria.</p>
+                    <a href="{{ route('blog.index') }}"
+                       class="inline-flex items-center gap-2 rounded-2xl bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-300">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>View All Posts</span>
+                    </a>
+                </div>
+            @endif
+        </div>
+    </section>
+
+    <!-- Sidebar Content (Popular & Recent Posts) -->
+    @if(($popularPosts->count() > 0 || $recentPosts->count() > 0) && $blogs->count() > 0)
+        <section class="relative py-20">
+            <div class="mx-auto max-w-6xl">
+                <div class="grid gap-8 lg:grid-cols-2">
+                    <!-- Popular Posts -->
+                    @if($popularPosts->count() > 0)
+                        <div class="glass-card rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-8 gsap-reveal" data-gsap-delay="0.08">
+                            <h3 class="text-xl font-orbitron text-white mb-6">Most Popular</h3>
+                            <div class="space-y-4">
+                                @foreach($popularPosts as $post)
+                                    <article class="flex gap-4">
+                                        <a href="{{ route('blog.show', $post->slug) }}" class="flex-shrink-0">
+                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}"
+                                                class="h-16 w-16 rounded-xl object-cover" loading="lazy">
+                                        </a>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-semibold text-white hover:text-cyan-400 transition-colors">
+                                                <a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
+                                            </h4>
+                                            <div class="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                                                <span>{{ $post->formatted_published_date }}</span>
+                                                <span>•</span>
+                                                <span>{{ number_format($post->views) }} views</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Recent Posts -->
+                    @if($recentPosts->count() > 0)
+                        <div class="glass-card rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-8 gsap-reveal" data-gsap-delay="0.16">
+                            <h3 class="text-xl font-orbitron text-white mb-6">Recent Posts</h3>
+                            <div class="space-y-4">
+                                @foreach($recentPosts as $post)
+                                    <article class="flex gap-4">
+                                        <a href="{{ route('blog.show', $post->slug) }}" class="flex-shrink-0">
+                                            <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}"
+                                                class="h-16 w-16 rounded-xl object-cover" loading="lazy">
+                                        </a>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-semibold text-white hover:text-cyan-400 transition-colors">
+                                                <a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
+                                            </h4>
+                                            <div class="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                                                <span>{{ $post->formatted_published_date }}</span>
+                                                <span>•</span>
+                                                <span>{{ $post->read_time }}</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
                             <option value="{{ route('blog.category', $category) }}" 
                                     {{ request()->is('blog/category/'.$category) ? 'selected' : '' }}>
                                 {{ ucfirst($category) }}

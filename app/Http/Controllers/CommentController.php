@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class CommentController extends Controller
 {
+    protected int $perPage = 10;
+
     /**
      * Store a newly created comment
      */
@@ -164,9 +166,9 @@ class CommentController extends Controller
                 }
             ])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($this->perPage);
 
-        $commentsData = $comments->map(function ($comment) {
+        $commentsData = $comments->getCollection()->map(function ($comment) {
             return [
                 'id' => $comment->id,
                 'name' => $comment->name,
@@ -190,7 +192,9 @@ class CommentController extends Controller
         return response()->json([
             'success' => true,
             'comments' => $commentsData,
-            'total' => $comments->count()
+            'total' => $comments->total(),
+            'current_page' => $comments->currentPage(),
+            'has_more' => $comments->hasMorePages()
         ]);
     }
 

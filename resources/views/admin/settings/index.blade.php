@@ -104,7 +104,7 @@
                                         <div class="space-y-3">
                                     @if($item->value)
                                                 <div class="flex items-center space-x-3">
-                                                    <img src="{{ asset('storage/' . $item->value) }}" alt="" class="h-16 w-16 object-cover rounded-lg border border-white/20" />
+                                                    <img src="{{ Storage::disk('public')->url($item->value) }}" alt="" class="h-16 w-16 object-cover rounded-lg border border-white/20" />
                                                     <span class="text-cyan-300/70 text-sm">{{ basename($item->value) }}</span>
                                 </div>
                             @endif

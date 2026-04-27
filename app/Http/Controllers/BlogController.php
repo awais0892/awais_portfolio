@@ -10,10 +10,11 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $query = Blog::published();
+        $search = $request->input('search', $request->input('q'));
 
         // Search functionality
-        if ($request->filled('search')) {
-            $query->search($request->search);
+        if (filled($search)) {
+            $query->search($search);
         }
 
         // Filter by category
@@ -26,7 +27,7 @@ class BlogController extends Controller
             $query->whereJsonContains('tags', $request->tag);
         }
 
-        $blogs = $query->orderBy('published_at', 'desc')->paginate(9);
+        $blogs = $query->orderBy('published_at', 'desc')->paginate(9)->withQueryString();
         $categories = Blog::getCategories();
         $popularPosts = Blog::getPopularPosts(5);
         $recentPosts = Blog::getRecentPosts(5);
@@ -84,14 +85,18 @@ class BlogController extends Controller
 
     public function search(Request $request)
     {
+        $search = $request->input('search', $request->input('q'));
+
+        $request->merge(['search' => $search]);
         $request->validate([
             'search' => 'required|string|min:2'
         ]);
 
         $blogs = Blog::published()
-            ->search($request->search)
+            ->search($search)
             ->orderBy('published_at', 'desc')
-            ->paginate(9);
+            ->paginate(9)
+            ->withQueryString();
             
         $categories = Blog::getCategories();
         $popularPosts = Blog::getPopularPosts(5);

@@ -13,33 +13,88 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Blog::query();
+        $filters = [
+            'search' => trim((string) $request->query('search', '')),
+            'status' => (string) $request->query('status', ''),
+            'category' => (string) $request->query('category', ''),
+            'per_page' => (int) $request->query('per_page', 10),
+        ];
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $query->search($request->search);
+        $allowedPerPage = [10, 25, 50, 100];
+        if (!in_array($filters['per_page'], $allowedPerPage, true)) {
+            $filters['per_page'] = 10;
         }
 
-        // Filter by status
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
+        $sort = [
+            'field' => (string) $request->query('sort_field', 'created_at'),
+            'direction' => (string) $request->query('sort_direction', 'desc'),
+        ];
+
+        $allowedSortFields = ['id', 'title', 'status', 'category', 'views', 'published_at', 'created_at'];
+        if (!in_array($sort['field'], $allowedSortFields, true)) {
+            $sort['field'] = 'created_at';
         }
 
-        // Filter by category
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
+        if (!in_array($sort['direction'], ['asc', 'desc'], true)) {
+            $sort['direction'] = 'desc';
         }
 
-        // Sort options
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
+        $query = Blog::query()->select([
+            'id',
+            'title',
+            'slug',
+            'excerpt',
+            'featured_image',
+            'status',
+            'author',
+            'category',
+            'tags',
+            'views',
+            'published_at',
+            'created_at',
+            'updated_at'
+        ]);
 
-        $blogs = $query->paginate(10);
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('excerpt', 'like', "%{$search}%")
+                  ->orWhere('tags', 'like', "%{$search}%");
+            });
+        }
+
+        if (in_array($filters['status'], ['draft', 'published', 'archived'], true)) {
+            $query->where('status', $filters['status']);
+        }
+
+        if ($filters['category'] !== '') {
+            $query->where('category', $filters['category']);
+        }
+
+        $query->orderBy($sort['field'], $sort['direction']);
+
+        if ($sort['field'] !== 'updated_at') {
+            $query->orderByDesc('updated_at');
+        }
+
+        if ($sort['field'] !== 'id') {
+            $query->orderByDesc('id');
+        }
+
+        $blogs = $query->paginate($filters['per_page'])->withQueryString();
+
+        $summary = [
+            'total' => Blog::count(),
+            'published' => Blog::where('status', 'published')->count(),
+            'draft' => Blog::where('status', 'draft')->count(),
+            'archived' => Blog::where('status', 'archived')->count(),
+        ];
+
         $categories = Blog::getCategories();
-        $statuses = ['all', 'draft', 'published', 'archived'];
 
-        return view('admin.blogs.index', compact('blogs', 'categories', 'statuses'));
+        return view('admin.blogs.index', compact('blogs', 'filters', 'sort', 'summary', 'categories'));
     }
 
     public function create()

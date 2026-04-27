@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class RatingController extends Controller
 {
+    protected int $perPage = 10;
+
     /**
      * Store a newly created rating
      */
@@ -182,9 +184,9 @@ class RatingController extends Controller
             ->where('rateable_id', $request->rateable_id)
             ->approved()
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($this->perPage);
 
-        $ratingsData = $ratings->map(function($rating) {
+        $ratingsData = $ratings->getCollection()->map(function ($rating) {
             return [
                 'id' => $rating->id,
                 'name' => $rating->name,
@@ -199,7 +201,9 @@ class RatingController extends Controller
         return response()->json([
             'success' => true,
             'ratings' => $ratingsData,
-            'total' => $ratings->count()
+            'total' => $ratings->total(),
+            'current_page' => $ratings->currentPage(),
+            'has_more' => $ratings->hasMorePages()
         ]);
     }
 

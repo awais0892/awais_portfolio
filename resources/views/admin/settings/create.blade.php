@@ -146,9 +146,9 @@
                     </div>
 
                     <div id="valueField">
-                        <label for="value" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Value
+                        <label for="valueInput" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Value
                             *</label>
-                        <input type="text" id="value" name="value" value="{{ old('value') }}" required
+                        <input type="text" id="valueInput" name="value" value="{{ old('value') }}"
                             class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white placeholder-cyan-300/50 focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 text-lg"
                             placeholder="Enter setting value">
                         @error('value')
@@ -159,9 +159,9 @@
                     </div>
 
                     <div id="imageField" class="hidden">
-                        <label for="image" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Image
+                        <label for="imageInput" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Image
                             File</label>
-                        <input type="file" id="image" name="image" accept="image/*"
+                        <input type="file" id="imageInput" name="image" accept="image/*"
                             class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-cyan-500 file:to-blue-600 file:text-white hover:file:from-cyan-600 hover:file:to-blue-700 transition-all duration-300">
                         <p class="text-sm text-cyan-300/70 mt-3">Max size: 2MB. Supported formats: JPG, PNG, GIF</p>
                         @error('image')
@@ -323,16 +323,23 @@
             const typeSelect = document.getElementById('type');
             const valueField = document.getElementById('valueField');
             const imageField = document.getElementById('imageField');
+            const valueInput = document.getElementById('valueInput');
+            const imageInput = document.getElementById('imageInput');
 
             function toggleFields() {
                 const selectedType = typeSelect.value;
+                const isImageType = selectedType === 'image';
 
-                if (selectedType === 'image') {
+                if (isImageType) {
                     valueField.classList.add('hidden');
                     imageField.classList.remove('hidden');
+                    valueInput.required = false;
+                    imageInput.required = true;
                 } else {
                     valueField.classList.remove('hidden');
                     imageField.classList.add('hidden');
+                    valueInput.required = true;
+                    imageInput.required = false;
                 }
             }
 

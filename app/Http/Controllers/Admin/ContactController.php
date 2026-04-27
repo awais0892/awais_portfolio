@@ -24,10 +24,16 @@ class ContactController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Please check your input and try again.',
-                'errors' => $validator->errors()
-            ], 422);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Please check your input and try again.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         try {
@@ -42,15 +48,23 @@ class ContactController extends Controller
             // Send emails
             $this->sendEmails($contact);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Thank you for your message! I will get back to you soon.'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Thank you for your message! I will get back to you soon.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Thank you for your message! I will get back to you soon.');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Something went wrong. Please try again later.'
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => 'Something went wrong. Please try again later.'
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Something went wrong. Please try again later.');
         }
     }
 

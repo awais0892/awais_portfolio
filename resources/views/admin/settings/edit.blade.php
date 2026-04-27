@@ -148,22 +148,21 @@
                     </div>
 
                     <div id="valueField">
-                        <label for="value" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Value
+                        <label for="valueInput" class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Value
                             *</label>
                         @if($setting->type === 'textarea')
-                            <textarea id="value" name="value" rows="4" required
+                            <textarea id="valueInput" name="value" rows="4"
                                 class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white placeholder-cyan-300/50 focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 text-lg"
                                 placeholder="Enter setting value">{{ old('value', $setting->value) }}</textarea>
                         @elseif($setting->type === 'boolean')
-                            <select id="value" name="value" required
+                            <select id="valueInput" name="value"
                                 class="js-choice w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 text-lg">
                                 <option value="1" class="bg-slate-800" {{ old('value', $setting->value) == '1' ? 'selected' : '' }}>Yes</option>
                                 <option value="0" class="bg-slate-800" {{ old('value', $setting->value) == '0' ? 'selected' : '' }}>No</option>
                             </select>
                         @else
-                            <input type="{{ $setting->type === 'number' ? 'number' : 'text' }}" id="value" name="value"
+                            <input type="{{ $setting->type === 'number' ? 'number' : 'text' }}" id="valueInput" name="value"
                                 value="{{ old('value', $setting->type === 'json' ? json_encode($setting->value) : $setting->value) }}"
-                                required
                                 class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white placeholder-cyan-300/50 focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 text-lg"
                                 placeholder="Enter setting value">
                         @endif
@@ -174,13 +173,13 @@
                         @enderror
                     </div>
 
-                    @if($setting->type === 'image')
-                        <div class="p-6 backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl">
+                    <div id="imageField" class="{{ $setting->type === 'image' ? '' : 'hidden' }}">
+                        <div class="p-6 backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl mb-6">
                             <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-4">Current
                                 Image</label>
                             <div class="flex items-center space-x-6">
                                 @if($setting->value)
-                                    <img src="{{ asset('storage/' . $setting->value) }}"
+                                    <img src="{{ Storage::disk('public')->url($setting->value) }}"
                                         alt="{{ $setting->label ?? $setting->key }}"
                                         class="w-40 h-32 object-cover rounded-2xl border-2 border-white/20 hover:border-cyan-400/50 transition-all duration-300">
                                 @else
@@ -197,10 +196,10 @@
                         </div>
 
                         <div>
-                            <label for="image"
+                            <label for="imageInput"
                                 class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">Upload New
                                 Image</label>
-                            <input type="file" id="image" name="image" accept="image/*"
+                            <input type="file" id="imageInput" name="image" accept="image/*"
                                 class="w-full bg-white/10 border border-white/20 rounded-xl px-6 py-4 text-white file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-cyan-500 file:to-blue-600 file:text-white hover:file:from-cyan-600 hover:file:to-blue-700 transition-all duration-300">
                             <p class="text-sm text-cyan-300/70 mt-3">Max size: 2MB. Supported formats: JPG, PNG, GIF</p>
                             @error('image')
@@ -209,7 +208,7 @@
                                 </p>
                             @enderror
                         </div>
-                    @endif
+                    </div>
 
                     <div class="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
                         <a href="{{ route('admin.settings.show', $setting) }}"
@@ -241,7 +240,44 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             initializeAnimations();
+            initializeFormLogic();
         });
+
+        function initializeFormLogic() {
+            const typeSelect = document.getElementById('type');
+            const valueField = document.getElementById('valueField');
+            const imageField = document.getElementById('imageField');
+            const valueInput = document.getElementById('valueInput');
+            const imageInput = document.getElementById('imageInput');
+
+            function toggleFields() {
+                const selectedType = typeSelect.value;
+                const isImageType = selectedType === 'image';
+
+                if (isImageType) {
+                    valueField.classList.add('hidden');
+                    imageField.classList.remove('hidden');
+                    if (valueInput) {
+                        valueInput.required = false;
+                    }
+                    if (imageInput) {
+                        imageInput.required = true;
+                    }
+                } else {
+                    valueField.classList.remove('hidden');
+                    imageField.classList.add('hidden');
+                    if (valueInput) {
+                        valueInput.required = true;
+                    }
+                    if (imageInput) {
+                        imageInput.required = false;
+                    }
+                }
+            }
+
+            typeSelect.addEventListener('change', toggleFields);
+            toggleFields();
+        }
 
         function initializeAnimations() {
             // Header animation

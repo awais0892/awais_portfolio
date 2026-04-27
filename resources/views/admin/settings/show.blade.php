@@ -119,7 +119,7 @@
                         @if($setting->type === 'image')
                             @if($setting->value)
                                 <div class="text-center">
-                                    <img src="{{ asset('storage/' . $setting->value) }}" 
+                                    <img src="{{ Storage::disk('public')->url($setting->value) }}" 
                                          alt="{{ $setting->label ?? $setting->key }}" 
                                          class="max-w-full h-auto max-h-96 rounded-2xl border-2 border-white/20 hover:border-cyan-400/50 transition-all duration-300">
                                     <p class="text-cyan-300/70 mt-3 text-sm">Image stored at: {{ $setting->value }}</p>

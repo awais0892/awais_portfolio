@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Star rating interaction
     const stars = document.querySelectorAll('#star-rating i');
     const ratingValue = document.getElementById('rating_value');
-    const ratingText = document.getElementById('rating_text');
+    const ratingText = document.getElementById('rating-text');
     
     if (stars.length > 0) {
         stars.forEach((star, index) => {
@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST',
             body: formData,
             headers: {
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         })
@@ -244,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateStarDisplay();
                 
                 // Reload ratings and stats
-                loadRatings();
+                resetRatings();
                 loadRatingStats();
             } else {
                 showNotification(data.message || 'Failed to submit rating', 'error');
@@ -274,12 +275,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function resetRatings() {
+        currentPage = 1;
+        hasMoreRatings = true;
+        loadRatings();
+    }
+
     function loadRatings() {
         if (isLoading) return;
         
         isLoading = true;
         
-        fetch(`{{ route("api.ratings.index") }}?rateable_type=${rateableType}&rateable_id=${rateableId}&page=${currentPage}`)
+        fetch(`{{ route("api.ratings.index") }}?rateable_type=${rateableType}&rateable_id=${rateableId}&page=${currentPage}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -304,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Show/hide load more button
-                hasMoreRatings = data.ratings.length >= 10; // Assuming 10 ratings per page
+                hasMoreRatings = Boolean(data.has_more);
                 if (hasMoreRatings && data.ratings.length > 0) {
                     loadMoreContainer.classList.remove('hidden');
                 } else {
@@ -332,7 +343,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadRatingStats() {
-        fetch(`{{ route("api.ratings.stats") }}?rateable_type=${rateableType}&rateable_id=${rateableId}`)
+        fetch(`{{ route("api.ratings.stats") }}?rateable_type=${rateableType}&rateable_id=${rateableId}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(data => {
             if (data.success) {

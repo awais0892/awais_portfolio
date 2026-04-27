@@ -26,12 +26,17 @@ class SettingsController extends Controller
     {
         $request->validate([
             'key' => 'required|string|max:255|unique:site_settings,key',
-            'value' => 'required|string',
+            'value' => [
+                Rule::requiredUnless('type', 'image'),
+                'string',
+                Rule::when($request->input('type') === 'json', ['json']),
+                Rule::when($request->input('type') === 'number', ['numeric']),
+            ],
             'type' => 'required|string|in:text,textarea,image,json,boolean,number',
             'group' => 'required|string|max:255',
             'label' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => [Rule::requiredIf(fn () => $request->input('type') === 'image'), 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048']
         ]);
 
         $data = [
@@ -48,8 +53,6 @@ class SettingsController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('settings', $filename, 'public');
             $data['value'] = $path;
-        } elseif ($request->type === 'json') {
-            $data['value'] = json_encode($request->value);
         } elseif ($request->type === 'boolean') {
             $data['value'] = $request->boolean('value') ? 1 : 0;
         } else {
@@ -76,12 +79,17 @@ class SettingsController extends Controller
     {
         $request->validate([
             'key' => ['required', 'string', 'max:255', Rule::unique('site_settings')->ignore($setting->id)],
-            'value' => 'required|string',
+            'value' => [
+                Rule::requiredUnless('type', 'image'),
+                'string',
+                Rule::when($request->input('type') === 'json', ['json']),
+                Rule::when($request->input('type') === 'number', ['numeric']),
+            ],
             'type' => 'required|string|in:text,textarea,image,json,boolean,number',
             'group' => 'required|string|max:255',
             'label' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => [Rule::requiredIf(fn () => $request->input('type') === 'image'), 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048']
         ]);
 
         $data = [
@@ -103,11 +111,9 @@ class SettingsController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('settings', $filename, 'public');
             $data['value'] = $path;
-        } elseif ($request->type === 'json') {
-            $data['value'] = json_encode($request->value);
         } elseif ($request->type === 'boolean') {
             $data['value'] = $request->boolean('value') ? 1 : 0;
-        } else {
+        } elseif ($request->type !== 'image') {
             $data['value'] = $request->value;
         }
 

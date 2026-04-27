@@ -127,6 +127,7 @@
                 method: 'POST',
                 body: formData,
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
@@ -144,7 +145,7 @@
                         commentForm.reset();
 
                         // Reload comments
-                        loadComments();
+                        resetComments();
                     } else {
                         if (data.errors) {
                             console.error('Comment validation errors:', data.errors);
@@ -177,12 +178,22 @@
             });
         }
 
+        function resetComments() {
+            currentPage = 1;
+            hasMoreComments = true;
+            loadComments();
+        }
+
         function loadComments() {
             if (isLoading) return;
 
             isLoading = true;
 
-            fetch(`{{ route("api.comments.index") }}?commentable_type=${commentableType}&commentable_id=${commentableId}&page=${currentPage}`)
+            fetch(`{{ route("api.comments.index") }}?commentable_type=${commentableType}&commentable_id=${commentableId}&page=${currentPage}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -210,7 +221,7 @@
                         commentCount.textContent = `(${data.total})`;
 
                         // Show/hide load more button
-                        hasMoreComments = data.comments.length >= 10; // Assuming 10 comments per page
+                        hasMoreComments = Boolean(data.has_more);
                         if (hasMoreComments && data.comments.length > 0) {
                             loadMoreContainer.classList.remove('hidden');
                         } else {
@@ -351,6 +362,7 @@
                     method: 'POST',
                     body: formData,
                     headers: {
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
                 })
@@ -359,7 +371,7 @@
                         if (data.success) {
                             showNotification(data.message, 'success');
                             replyForm.remove();
-                            loadComments(); // Reload to show the new reply
+                            resetComments();
                         } else {
                             console.error('Reply validation errors:', data.errors);
                             let errorMsg = data.message || 'Failed to post reply';

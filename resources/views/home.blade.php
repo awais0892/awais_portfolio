@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('title', $settings['site_title'] ?? 'Awais Ahmad - Full-Stack Developer')
+@section('description', $settings['site_description'] ?? 'Awais Ahmad is a full-stack developer specializing in Laravel and MERN stack web applications. Explore his portfolio, featured projects, experience, and contact options.')
 
 @section('content')
     <!-- Hero Section -->
@@ -36,7 +37,9 @@
                     <div
                         class="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 blur-2xl opacity-40 scale-110">
                     </div>
-                    <img src="{{ asset('assets/awais-profile-1.jpeg') }}" alt="Awais Ahmad"
+                    <img src="{{ asset('assets/' . ($settings['profile_image'] ?? 'awais-profile-1.jpeg')) }}" alt="Awais Ahmad"
+                        loading="lazy"
+                        decoding="async"
                         class="relative z-10 w-72 h-72 md:w-96 md:h-96 rounded-full object-cover object-top border-4 border-cyan-500/60 shadow-2xl"
                         style="box-shadow: 0 0 40px rgba(0, 245, 255, 0.3), 0 0 80px rgba(122, 0, 255, 0.2);">
                 </div>
@@ -60,11 +63,13 @@
                 <div class="flex gap-4">
                     <a href="{{ $settings['linkedin_url'] ?? 'https://www.linkedin.com/in/awaisahmads/' }}"
                         target="_blank"
+                        rel="noopener noreferrer"
                         class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg transition-colors glow-button">
                         LinkedIn Profile
                     </a>
                     <a href="{{ $settings['github_url'] ?? 'https://github.com/awais0892' }}"
                         target="_blank"
+                        rel="noopener noreferrer"
                         class="border-2 border-cyan-500 hover:bg-cyan-500/20 text-white font-bold py-3 px-6 rounded-lg transition-all">
                         GitHub Profile
                     </a>
@@ -77,38 +82,40 @@
     <section id="experience" class="py-20">
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">Work Experience</h2>
         <div class="max-w-4xl mx-auto space-y-8">
-            @foreach($experiences as $experience)
-                <div class="glass-card p-8 rounded-lg exp-card gsap-reveal">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                        <div>
-                            <h3 class="text-2xl font-semibold text-white font-orbitron">{{ $experience->title }}</h3>
-                            <p class="text-cyan-400 text-lg">{{ $experience->company }}@if($experience->location),
-                            {{ $experience->location }}@endif
-                            </p>
-                        </div>
-                        <span
-                            class="text-gray-400 bg-cyan-900/30 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">{{ $experience->duration }}</span>
-                    </div>
-                    <div class="text-gray-300 mb-4">
-                        {!! nl2br(e($experience->description)) !!}
-                    </div>
-                    @if($experience->achievements && count($experience->achievements) > 0)
-                        <ul class="space-y-3 text-gray-300 list-disc list-inside mb-4">
-                            @foreach($experience->achievements as $achievement)
-                                <li>{{ $achievement }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    @if($experience->technologies && count($experience->technologies) > 0)
-                        <div class="flex flex-wrap gap-2">
-                            @foreach($experience->technologies as $tech)
-                                <span
-                                    class="bg-cyan-900/50 text-cyan-300 text-xs font-semibold px-2.5 py-1 rounded-full">{{ $tech }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+            @if($experiences->isEmpty())
+                <div class="glass-card p-8 rounded-lg text-center text-slate-300 gsap-reveal">
+                    No work experience is available at the moment.
                 </div>
-            @endforeach
+            @else
+                @foreach($experiences as $experience)
+                    <div class="glass-card p-8 rounded-lg exp-card gsap-reveal">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                            <div>
+                                <h3 class="text-2xl font-semibold text-white font-orbitron">{{ $experience->title }}</h3>
+                                <p class="text-cyan-400 text-lg">{{ $experience->company }}@if($experience->location), {{ $experience->location }}@endif</p>
+                            </div>
+                            <span class="text-gray-400 bg-cyan-900/30 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">{{ $experience->duration }}</span>
+                        </div>
+                        <div class="text-gray-300 mb-4">
+                            {!! nl2br(e($experience->description)) !!}
+                        </div>
+                        @if($experience->achievements && count($experience->achievements) > 0)
+                            <ul class="space-y-3 text-gray-300 list-disc list-inside mb-4">
+                                @foreach($experience->achievements as $achievement)
+                                    <li>{{ $achievement }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        @if($experience->technologies && count($experience->technologies) > 0)
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($experience->technologies as $tech)
+                                    <span class="bg-cyan-900/50 text-cyan-300 text-xs font-semibold px-2.5 py-1 rounded-full">{{ $tech }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            @endif
         </div>
     </section>
 
@@ -116,10 +123,10 @@
     <section id="projects" class="py-20">
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">Featured Projects</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($projects as $project)
+            @forelse($projects as $project)
                 <div class="glass-card rounded-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 gsap-reveal"
                     data-gsap-delay="{{ $loop->index * 0.1 }}">
-                    <img src="{{ $project->image_url }}" alt="{{ $project->title }} Mockup" class="w-full h-48 object-cover" loading="lazy" width="800" height="480">
+                    <img src="{{ $project->display_image_url }}" alt="{{ $project->title }} Mockup" class="w-full h-48 object-cover" loading="lazy" width="800" height="480">
                     <div class="p-6">
                         <h3 class="text-xl font-orbitron text-white mb-2">{{ $project->title }}</h3>
                         <p class="text-gray-300 mb-4 h-24">{{ Str::limit($project->description, 120) }}</p>
@@ -133,11 +140,11 @@
                         @endif
                         <div class="flex gap-4">
                             @if($project->live_url)
-                                <a href="{{ $project->live_url }}" target="_blank"
+                                <a href="{{ $project->live_url }}" target="_blank" rel="noopener noreferrer"
                                     class="text-cyan-400 hover:underline font-semibold">Live Demo &rarr;</a>
                             @endif
                             @if($project->github_url)
-                                <a href="{{ $project->github_url }}" target="_blank"
+                                <a href="{{ $project->github_url }}" target="_blank" rel="noopener noreferrer"
                                     class="text-cyan-400 hover:underline font-semibold">Source Code &rarr;</a>
                             @endif
                             <a href="{{ route('project.show', $project->slug) }}"
@@ -145,7 +152,11 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="glass-card col-span-full p-8 rounded-lg text-center text-slate-300 gsap-reveal">
+                    No featured projects are available right now. Check back soon.
+                </div>
+            @endforelse
         </div>
         <div class="text-center mt-8">
             <a href="{{ route('projects') }}"
@@ -159,15 +170,21 @@
     <section id="skills" class="py-20">
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">Technical Arsenal</h2>
         <div class="max-w-6xl mx-auto glass-card p-8 rounded-lg">
-            <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-8">
-                @foreach($skills as $skill)
-                    <div class="flex flex-col items-center gap-2 gsap-reveal"
-                        title="{{ $skill->name }} - {{ $skill->proficiency }}%">
-                        <img src="{{ $skill->icon_url }}" class="h-16 w-16 skill-icon" alt="{{ $skill->name }}" />
-                        <span class="font-semibold text-sm text-center">{{ $skill->name }}</span>
-                    </div>
-                @endforeach
-            </div>
+            @if($skills->isEmpty())
+                <div class="text-center text-slate-300 gsap-reveal">
+                    No skills are available right now. Please check back later.
+                </div>
+            @else
+                <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-8">
+                    @foreach($skills as $skill)
+                        <div class="flex flex-col items-center gap-2 gsap-reveal"
+                            title="{{ $skill->name }} - {{ $skill->proficiency }}%">
+                            <img src="{{ $skill->icon_url }}" class="h-16 w-16 skill-icon" alt="{{ $skill->name }}" />
+                            <span class="font-semibold text-sm text-center">{{ $skill->name }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 
@@ -175,15 +192,20 @@
     <section id="education" class="py-20">
         <h2 class="text-4xl font-orbitron text-center text-white mb-12 gsap-reveal">Education & Training</h2>
         <div class="max-w-4xl mx-auto space-y-8">
-            @foreach($education as $edu)
-                <div class="glass-card p-8 rounded-lg exp-card gsap-reveal" data-gsap-delay="{{ $loop->index * 0.1 }}">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
-                        <div>
-                            <h3 class="text-2xl font-semibold text-white font-orbitron">{{ $edu->degree }}</h3>
-                            <p class="text-cyan-400 text-lg">{{ $edu->institution }}@if($edu->location),
-                            {{ $edu->location }}@endif
-                            </p>
-                        </div>
+            @if($education->isEmpty())
+                <div class="glass-card p-8 rounded-lg text-center text-slate-300 gsap-reveal" data-gsap-delay="0.1">
+                    No education records are available right now.
+                </div>
+            @else
+                @foreach($education as $edu)
+                    <div class="glass-card p-8 rounded-lg exp-card gsap-reveal" data-gsap-delay="{{ $loop->index * 0.1 }}">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+                            <div>
+                                <h3 class="text-2xl font-semibold text-white font-orbitron">{{ $edu->degree }}</h3>
+                                <p class="text-cyan-400 text-lg">{{ $edu->institution }}@if($edu->location),
+                                {{ $edu->location }}@endif
+                                </p>
+                            </div>
                         <span
                             class="text-gray-400 bg-cyan-900/30 px-3 py-1 rounded-full text-sm mt-2 md:mt-0">{{ $edu->duration }}</span>
                     </div>
@@ -215,6 +237,7 @@
                     @endif
                 </div>
             @endforeach
+            @endif
         </div>
     </section>
 
@@ -226,33 +249,59 @@
             say hello, feel free to reach out!
         </p>
         <div class="max-w-2xl mx-auto glass-card p-8 rounded-lg mt-8 gsap-reveal" data-gsap-delay="0.2">
-            <form id="contact-form" class="space-y-6">
+            @if(session('success'))
+                <div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-200 mb-6">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-rose-200 mb-6">
+                    {{ session('error') }}
+                </div>
+            @endif
+            <form id="contact-form" action="{{ route('contact.store') }}" method="POST" class="space-y-6">
                 @csrf
+                <p class="text-sm text-slate-400">If JavaScript is unavailable, this form will still submit normally.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="name" class="block text-left text-cyan-400 font-semibold mb-2">Your Name</label>
                         <input type="text" id="name" name="name" required
+                            value="{{ old('name') }}"
                             class="w-full p-3 rounded-lg form-input transition-all duration-300"
                             placeholder="e.g., Jane Doe">
+                        @error('name')
+                            <p class="text-rose-300 text-sm mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label for="email" class="block text-left text-cyan-400 font-semibold mb-2">Your Email</label>
                         <input type="email" id="email" name="email" required
+                            value="{{ old('email') }}"
                             class="w-full p-3 rounded-lg form-input transition-all duration-300"
                             placeholder="e.g., jane@example.com">
+                        @error('email')
+                            <p class="text-rose-300 text-sm mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
                 <div>
                     <label for="subject" class="block text-left text-cyan-400 font-semibold mb-2">Subject</label>
                     <input type="text" id="subject" name="subject" required
+                        value="{{ old('subject') }}"
                         class="w-full p-3 rounded-lg form-input transition-all duration-300"
                         placeholder="e.g., Project Opportunity">
+                    @error('subject')
+                        <p class="text-rose-300 text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="message" class="block text-left text-cyan-400 font-semibold mb-2">Message</label>
                     <textarea id="message" name="message" rows="6" required
                         class="w-full p-3 rounded-lg form-input transition-all duration-300"
-                        placeholder="Your message here..."></textarea>
+                        placeholder="Your message here...">{{ old('message') }}</textarea>
+                    @error('message')
+                        <p class="text-rose-300 text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="text-center">
                     <button type="submit"

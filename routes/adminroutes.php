@@ -20,30 +20,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,15')->name('login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Temporary diagnostic route (comment this out after use)
-    Route::get('/diag', function () {
-        if (app()->environment('local'))
-            return "Only for production troubleshooting";
-        $email = config('admin.email');
-        $user = \App\Models\User::where('email', $email)->first();
-        return [
-            'configured_email' => $email,
-            'user_found' => (bool) $user,
-            'user_email' => $user ? $user->email : 'N/A',
-            'password_hash_check' => $user ? (strlen($user->password) > 0) : false,
-            'app_env' => app()->environment(),
-            'config_cached' => app()->configurationIsCached(),
-        ];
-    });
+    if (app()->environment('local')) {
+        Route::get('/diag', function () {
+            return [
+                'configured_email' => config('admin.email'),
+                'app_env' => app()->environment(),
+                'config_cached' => app()->configurationIsCached(),
+            ];
+        })->middleware(\App\Http\Middleware\AdminMiddleware::class)->name('diag');
+    }
 
     // Protected admin routes (use explicit middleware class to avoid alias resolution issues)
     Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Projects
-        Route::resource('projects', ProjectController::class);
-        Route::post('projects/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('projects.toggle-status');
         Route::delete('projects/bulk-delete', [ProjectController::class, 'bulkDelete'])->name('projects.bulk-delete');
+        Route::post('projects/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('projects.toggle-status');
+        Route::resource('projects', ProjectController::class);
 
         // Contacts
         Route::get('contacts', [ContactController::class, 'index'])->name('contacts.index');

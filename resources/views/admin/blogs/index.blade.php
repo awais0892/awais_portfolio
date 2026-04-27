@@ -1,295 +1,318 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Admin - Blog Management')
+@section('title', 'Blogs')
+@section('page-title', 'Blogs')
+@section('page-subtitle', 'Search, sort and maintain the blog posts shown across the site.')
+
+@section('page-actions')
+    <a href="{{ route('admin.blogs.create') }}"
+        class="admin-focus inline-flex items-center gap-2 rounded-2xl bg-cyan-300 px-4 py-2.5 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-cyan-200">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span>New Post</span>
+    </a>
+@endsection
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-        <!-- Animated Background Elements -->
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-            <div
-                class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000">
-            </div>
-            <div
-                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse delay-500">
-            </div>
-        </div>
+    @php
+        $sortIcon = function (string $field) use ($sort): string {
+            if ($sort['field'] !== $field) {
+                return 'fa-sort';
+            }
 
-        <!-- Grid Pattern Overlay -->
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=" 60" height="60" viewBox="0 0 60 60"
-            xmlns="http://www.w3.org/2000/svg" %3E%3Cg fill="none" fill-rule="evenodd" %3E%3Cg fill="%23ffffff"
-            fill-opacity="0.02" %3E%3Cpath
-            d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"
-            /%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+            return $sort['direction'] === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+        };
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Header Section -->
-            <div class="mb-12 text-center">
-                <div class="inline-block">
-                    <h1
-                        class="text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-4 tracking-tight">
-                        BLOG MANAGEMENT
-                    </h1>
-                    <div class="h-1 w-32 bg-gradient-to-r from-cyan-400 to-purple-600 mx-auto rounded-full"></div>
+        $sortDirection = function (string $field) use ($sort): string {
+            if ($sort['field'] === $field && $sort['direction'] === 'asc') {
+                return 'desc';
+            }
+
+            return 'asc';
+        };
+
+        $sortUrl = function (string $field) use ($sortDirection): string {
+            return request()->fullUrlWithQuery([
+                'sort_field' => $field,
+                'sort_direction' => $sortDirection($field),
+                'page' => 1,
+            ]);
+        };
+    @endphp
+
+    <div class="space-y-6">
+        <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <article class="admin-surface rounded-[1.6rem] p-5">
+                <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Total</p>
+                <div class="mt-3 flex items-end justify-between gap-3">
+                    <p class="admin-display text-3xl font-bold text-white tabular-nums">{{ $summary['total'] }}</p>
+                    <i class="fa-solid fa-newspaper text-cyan-300/80" aria-hidden="true"></i>
                 </div>
-                <p class="text-cyan-300/80 text-xl mt-6 font-light tracking-wide">
-                    Manage your blog posts, articles, and content
+            </article>
+            <article class="admin-surface rounded-[1.6rem] p-5">
+                <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Published</p>
+                <div class="mt-3 flex items-end justify-between gap-3">
+                    <p class="admin-display text-3xl font-bold text-white tabular-nums">{{ $summary['published'] }}</p>
+                    <i class="fa-solid fa-circle-check text-emerald-300/80" aria-hidden="true"></i>
+                </div>
+            </article>
+            <article class="admin-surface rounded-[1.6rem] p-5">
+                <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Draft</p>
+                <div class="mt-3 flex items-end justify-between gap-3">
+                    <p class="admin-display text-3xl font-bold text-white tabular-nums">{{ $summary['draft'] }}</p>
+                    <i class="fa-solid fa-file text-amber-300/80" aria-hidden="true"></i>
+                </div>
+            </article>
+            <article class="admin-surface rounded-[1.6rem] p-5">
+                <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Archived</p>
+                <div class="mt-3 flex items-end justify-between gap-3">
+                    <p class="admin-display text-3xl font-bold text-white tabular-nums">{{ $summary['archived'] }}</p>
+                    <i class="fa-solid fa-archive text-slate-300/80" aria-hidden="true"></i>
+                </div>
+            </article>
+        </section>
+
+        <form method="GET" action="{{ route('admin.blogs.index') }}" class="admin-surface rounded-[1.75rem] p-6">
+            <div class="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,0.6fr))]">
+                <div>
+                    <label for="search" class="mb-2 block text-sm font-semibold text-slate-200">Search</label>
+                    <input type="search" id="search" name="search" value="{{ $filters['search'] }}"
+                        class="admin-focus w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white placeholder:text-slate-500"
+                        placeholder="Search posts..." autocomplete="off">
+                </div>
+
+                <div>
+                    <label for="status" class="mb-2 block text-sm font-semibold text-slate-200">Status</label>
+                    <select id="status" name="status"
+                        class="admin-focus w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white">
+                        <option value="">All</option>
+                        <option value="published" @selected($filters['status'] === 'published')>Published</option>
+                        <option value="draft" @selected($filters['status'] === 'draft')>Draft</option>
+                        <option value="archived" @selected($filters['status'] === 'archived')>Archived</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="category" class="mb-2 block text-sm font-semibold text-slate-200">Category</label>
+                    <select id="category" name="category"
+                        class="admin-focus w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category }}" @selected($filters['category'] === $category)>{{ $category }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="per_page" class="mb-2 block text-sm font-semibold text-slate-200">Per Page</label>
+                    <select id="per_page" name="per_page"
+                        class="admin-focus w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white">
+                        @foreach([10, 25, 50, 100] as $size)
+                            <option value="{{ $size }}" @selected($filters['per_page'] === $size)>{{ $size }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+                <p class="text-sm text-slate-400">
+                    {{ $blogs->total() }} result{{ $blogs->total() === 1 ? '' : 's' }} matching the current filters.
                 </p>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="{{ route('admin.blogs.index') }}"
+                        class="admin-focus inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition-colors duration-200 hover:bg-white/10">
+                        Reset
+                    </a>
+                    <button type="submit"
+                        class="admin-focus inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 transition-colors duration-200 hover:bg-slate-200">
+                        Apply Filters
+                    </button>
+                </div>
             </div>
+        </form>
 
-            <!-- Action Button -->
-            <div class="text-center mb-12">
-                <a href="{{ route('admin.blogs.create') }}"
-                    class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg rounded-2xl overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    </div>
-                    <div class="relative flex items-center">
-                        <div
-                            class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-plus text-white text-sm"></i>
-                        </div>
-                        <span class="tracking-wider">CREATE NEW POST</span>
-                    </div>
-                    <div
-                        class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition-opacity duration-300">
-                    </div>
-                </a>
-            </div>
+        <form method="POST" action="{{ route('admin.blogs.bulk-action') }}" id="blogBulkForm" class="space-y-4"
+            data-confirm-message="Are you sure you want to perform this bulk action?">
+            @csrf
+            <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
 
-            <!-- Filters and Search -->
-            <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
-                <form method="GET" action="{{ route('admin.blogs.index') }}" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <!-- Search -->
-                        <div>
-                            <label
-                                class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Search</label>
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search posts..."
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-cyan-300/50 focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300">
-                        </div>
-
-                        <!-- Status Filter -->
-                        <div>
-                            <label
-                                class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Status</label>
-                            <select name="status"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
-                                <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All Statuses</option>
-                                @foreach($statuses as $status)
-                                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
-                                        {{ ucfirst($status) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Category Filter -->
-                        <div>
-                            <label
-                                class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Category</label>
-                            <select name="category"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
-                                        {{ $category }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Sort -->
-                        <div>
-                            <label class="block text-sm font-bold text-cyan-300 uppercase tracking-wider mb-2">Sort
-                                By</label>
-                            <select name="sort_by"
-                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
-                                <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Created
-                                    Date</option>
-                                <option value="updated_at" {{ request('sort_by') == 'updated_at' ? 'selected' : '' }}>Updated
-                                    Date</option>
-                                <option value="title" {{ request('sort_by') == 'title' ? 'selected' : '' }}>Title</option>
-                                <option value="views" {{ request('sort_by') == 'views' ? 'selected' : '' }}>Views</option>
-                                <option value="published_at" {{ request('sort_by') == 'published_at' ? 'selected' : '' }}>
-                                    Published Date</option>
-                            </select>
-                        </div>
+            <section class="admin-surface rounded-[1.75rem] p-5">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="admin-display text-xl font-bold text-white">Blog Posts</h2>
+                        <p class="mt-1 text-sm text-slate-400">
+                            Showing {{ $blogs->firstItem() ?? 0 }} to {{ $blogs->lastItem() ?? 0 }} of {{ $blogs->total() }}.
+                        </p>
                     </div>
 
-                    <div class="flex justify-between items-center">
-                        <button type="submit"
-                            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-400/30 rounded-xl hover:from-cyan-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-105">
-                            <div
-                                class="absolute inset-0 rounded-xl bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            </div>
-                            <i class="fas fa-search mr-3 relative z-10"></i>
-                            <span class="relative z-10 font-semibold">Apply Filters</span>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span
+                            class="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-slate-300">
+                            <span id="selectedBlogsCount" class="font-semibold text-white">0</span> selected
+                        </span>
+                        <select id="bulkAction" name="action"
+                            class="admin-focus rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-2.5 text-sm text-white">
+                            <option value="">Bulk Actions</option>
+                            <option value="publish">Publish Selected</option>
+                            <option value="unpublish">Unpublish Selected</option>
+                            <option value="archive">Archive Selected</option>
+                            <option value="delete">Delete Selected</option>
+                        </select>
+                        <button type="submit" id="bulkActionBtn"
+                            class="admin-focus inline-flex items-center gap-2 rounded-2xl border border-rose-400/20 bg-rose-500/10 px-4 py-2.5 text-sm font-semibold text-rose-100 transition-colors duration-200 hover:bg-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled>
+                            <i class="fa-solid fa-play" aria-hidden="true"></i>
+                            <span>Apply</span>
                         </button>
-
-                        <a href="{{ route('admin.blogs.index') }}"
-                            class="text-cyan-300 hover:text-cyan-200 transition-colors duration-300">
-                            <i class="fas fa-times mr-2"></i>Clear Filters
-                        </a>
                     </div>
-                </form>
-            </div>
+                </div>
+            </section>
 
-            <!-- Bulk Actions -->
-            <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl mb-8">
-                <form id="bulkActionForm" method="POST" action="{{ route('admin.blogs.bulk-action') }}" class="space-y-4">
-                    @csrf
-                    <div
-                        class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                        <div class="flex items-center space-x-4">
-                            <select id="bulkAction" name="action"
-                                class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm transition-all duration-300 js-choice">
-                                <option value="">Bulk Actions</option>
-                                <option value="publish">Publish Selected</option>
-                                <option value="unpublish">Unpublish Selected</option>
-                                <option value="archive">Archive Selected</option>
-                                <option value="delete">Delete Selected</option>
-                            </select>
-                            <button type="submit" id="bulkActionBtn" disabled
-                                class="px-6 py-2 bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-300 border border-red-400/30 rounded-xl hover:from-red-500/30 hover:to-pink-500/30 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-                                Apply
-                            </button>
-                        </div>
-                        <div class="text-cyan-300/70 text-sm">
-                            <span id="selectedCount">0</span> posts selected
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Blog Posts Table -->
-            <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+            <section class="admin-surface overflow-hidden rounded-[1.75rem]">
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="min-w-full divide-y divide-white/10">
                         <thead class="bg-white/5">
-                            <tr>
-                                <th class="px-6 py-4 text-left">
-                                    <input type="checkbox" id="selectAll"
-                                        class="w-5 h-5 rounded-lg border-white/30 text-cyan-500 focus:ring-cyan-400 bg-white/10">
+                            <tr class="text-left text-xs uppercase tracking-[0.22em] text-slate-400">
+                                <th scope="col" class="px-5 py-4">
+                                    <input type="checkbox" id="selectAllBlogs"
+                                        class="admin-focus h-4 w-4 rounded border-white/20 bg-slate-950/70 text-cyan-300">
                                 </th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Post</th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Author</th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Category
+                                <th scope="col" class="px-5 py-4">
+                                    <a href="{{ $sortUrl('id') }}"
+                                        class="admin-focus inline-flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-white/5">
+                                        <span>ID</span>
+                                        <i class="fa-solid {{ $sortIcon('id') }}" aria-hidden="true"></i>
+                                    </a>
                                 </th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Views</th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-4 text-left text-cyan-300 font-bold uppercase tracking-wider">Actions
+                                <th scope="col" class="px-5 py-4">
+                                    <a href="{{ $sortUrl('title') }}"
+                                        class="admin-focus inline-flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-white/5">
+                                        <span>Post</span>
+                                        <i class="fa-solid {{ $sortIcon('title') }}" aria-hidden="true"></i>
+                                    </a>
                                 </th>
+                                <th scope="col" class="px-5 py-4">Author</th>
+                                <th scope="col" class="px-5 py-4">Category</th>
+                                <th scope="col" class="px-5 py-4">
+                                    <a href="{{ $sortUrl('status') }}"
+                                        class="admin-focus inline-flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-white/5">
+                                        <span>Status</span>
+                                        <i class="fa-solid {{ $sortIcon('status') }}" aria-hidden="true"></i>
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-5 py-4">
+                                    <a href="{{ $sortUrl('views') }}"
+                                        class="admin-focus inline-flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-white/5">
+                                        <span>Views</span>
+                                        <i class="fa-solid {{ $sortIcon('views') }}" aria-hidden="true"></i>
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-5 py-4">
+                                    <a href="{{ $sortUrl('published_at') }}"
+                                        class="admin-focus inline-flex items-center gap-2 rounded-xl px-2 py-1 hover:bg-white/5">
+                                        <span>Published</span>
+                                        <i class="fa-solid {{ $sortIcon('published_at') }}" aria-hidden="true"></i>
+                                    </a>
+                                </th>
+                                <th scope="col" class="px-5 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/10">
                             @forelse($blogs as $blog)
-                                <tr class="group hover:bg-white/5 transition-all duration-300">
-                                    <td class="px-6 py-4">
+                                <tr class="align-top text-sm text-slate-200">
+                                    <td class="px-5 py-5">
                                         <input type="checkbox" name="selected_blogs[]" value="{{ $blog->id }}"
-                                            class="blog-checkbox w-5 h-5 rounded-lg border-white/30 text-cyan-500 focus:ring-cyan-400 bg-white/10">
+                                            class="blog-selector admin-focus h-4 w-4 rounded border-white/20 bg-slate-950/70 text-cyan-300">
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center space-x-4">
-                                            <div
-                                                class="w-16 h-12 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl overflow-hidden">
-                                                @if($blog->featured_image)
-                                                    @if(str_starts_with($blog->featured_image, 'http'))
-                                                        {{-- Cloudinary URL --}}
-                                                        <img src="{{ $blog->featured_image }}" alt="{{ $blog->title }}"
-                                                            class="w-full h-full object-cover">
-                                                    @else
-                                                        {{-- Local storage URL --}}
-                                                        <img src="{{ asset('storage/' . $blog->featured_image) }}"
-                                                            alt="{{ $blog->title }}" class="w-full h-full object-cover">
-                                                    @endif
-                                                @else
-                                                    <div class="w-full h-full flex items-center justify-center">
-                                                        <i class="fas fa-image text-cyan-300/50"></i>
+                                    <td class="px-5 py-5 font-medium text-slate-400">#{{ $blog->id }}</td>
+                                    <td class="px-5 py-5">
+                                        <div class="flex min-w-[18rem] items-start gap-4">
+                                            <img src="{{ $blog->featured_image_url }}" alt="{{ $blog->title }}" width="80"
+                                                height="60" class="h-16 w-20 rounded-2xl object-cover" loading="lazy">
+                                            <div class="min-w-0">
+                                                <p class="truncate font-semibold text-white">{{ $blog->title }}</p>
+                                                <p class="mt-1 max-w-md break-words text-sm leading-6 text-slate-400">
+                                                    {{ \Illuminate\Support\Str::limit($blog->excerpt, 130) }}
+                                                </p>
+                                                @if($blog->tags)
+                                                    <div class="mt-2 flex flex-wrap gap-1">
+                                                        @foreach(array_slice($blog->tags, 0, 2) as $tag)
+                                                            <span class="rounded-full border border-cyan-400/15 bg-cyan-400/10 px-2 py-0.5 text-xs font-medium text-cyan-100">
+                                                                {{ $tag }}
+                                                            </span>
+                                                        @endforeach
+                                                        @if(count($blog->tags) > 2)
+                                                            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-medium text-slate-300">
+                                                                +{{ count($blog->tags) - 2 }}
+                                                            </span>
+                                                        @endif
                                                     </div>
                                                 @endif
                                             </div>
-                                            <div>
-                                                <h3
-                                                    class="text-white font-semibold text-lg group-hover:text-cyan-300 transition-colors duration-300">
-                                                    {{ $blog->title }}
-                                                </h3>
-                                                <p class="text-cyan-300/70 text-sm">{{ Str::limit($blog->excerpt, 60) }}</p>
-                                                <div class="flex items-center space-x-2 mt-2">
-                                                    @if($blog->tags)
-                                                        @foreach(array_slice($blog->tags, 0, 2) as $tag)
-                                                            <span
-                                                                class="px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs rounded-lg">{{ $tag }}</span>
-                                                        @endforeach
-                                                        @if(count($blog->tags) > 2)
-                                                            <span class="text-cyan-300/50 text-xs">+{{ count($blog->tags) - 2 }}
-                                                                more</span>
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                            </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span class="text-white">{{ $blog->author }}</span>
+                                    <td class="px-5 py-5">
+                                        <span class="text-slate-300">{{ $blog->author }}</span>
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-5 py-5">
                                         @if($blog->category)
-                                            <span
-                                                class="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-lg">{{ $blog->category }}</span>
+                                            <span class="rounded-full border border-blue-400/15 bg-blue-400/10 px-2.5 py-1 text-xs font-medium text-blue-100">
+                                                {{ $blog->category }}
+                                            </span>
                                         @else
-                                            <span class="text-cyan-300/50 text-sm">No category</span>
+                                            <span class="text-slate-500">No category</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4">
-                                        @php
-                                            $statusColors = [
-                                                'published' => 'bg-green-500/20 text-green-300 border-green-400/30',
-                                                'draft' => 'bg-yellow-500/20 text-yellow-300 border-yellow-400/30',
-                                                'archived' => 'bg-gray-500/20 text-gray-300 border-gray-400/30'
-                                            ];
-                                            $statusColor = $statusColors[$blog->status] ?? 'bg-gray-500/20 text-gray-300 border-gray-400/30';
-                                        @endphp
-                                        <span class="px-3 py-1 border rounded-lg text-sm {{ $statusColor }}">
+                                    <td class="px-5 py-5">
+                                        <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold
+                                            @if($blog->status === 'published') bg-emerald-400/15 text-emerald-100
+                                            @elseif($blog->status === 'draft') bg-amber-400/15 text-amber-100
+                                            @else bg-slate-700 text-slate-200 @endif">
                                             {{ ucfirst($blog->status) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span class="text-white font-mono">{{ number_format($blog->views) }}</span>
+                                    <td class="px-5 py-5 font-medium tabular-nums text-slate-300">{{ number_format($blog->views) }}</td>
+                                    <td class="px-5 py-5 text-slate-400">
+                                        @if($blog->published_at)
+                                            <time datetime="{{ $blog->published_at->toDateString() }}">
+                                                {{ $blog->published_at->format('M d, Y') }}
+                                            </time>
+                                        @else
+                                            <span class="text-slate-500">Not published</span>
+                                        @endif
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm">
-                                            <div class="text-white">{{ $blog->formatted_published_date }}</div>
-                                            @if($blog->status === 'published')
-                                                <div class="text-cyan-300/70">{{ $blog->read_time }}</div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center space-x-2">
+                                    <td class="px-5 py-5">
+                                        <div class="flex items-center justify-end gap-2">
                                             <a href="{{ route('admin.blogs.show', $blog) }}"
-                                                class="text-cyan-400 hover:text-cyan-300 transition-colors duration-300"
-                                                title="View">
-                                                <i class="fas fa-eye"></i>
+                                                class="admin-focus inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-200 transition-colors duration-200 hover:bg-white/10"
+                                                aria-label="View {{ $blog->title }}">
+                                                <i class="fa-solid fa-eye" aria-hidden="true"></i>
                                             </a>
                                             <a href="{{ route('admin.blogs.edit', $blog) }}"
-                                                class="text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                                                title="Edit">
-                                                <i class="fas fa-edit"></i>
+                                                class="admin-focus inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-200 transition-colors duration-200 hover:bg-white/10"
+                                                aria-label="Edit {{ $blog->title }}">
+                                                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                                             </a>
-                                            <button onclick="toggleStatus({{ $blog->id }}, '{{ $blog->status }}')"
-                                                class="text-green-400 hover:text-green-300 transition-colors duration-300"
-                                                title="Toggle Status">
-                                                <i class="fas fa-toggle-{{ $blog->status === 'published' ? 'on' : 'off' }}"></i>
-                                            </button>
+                                            <form method="POST" action="{{ route('admin.blogs.toggle-status', $blog) }}">
+                                                @csrf
+                                                <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
+                                                <button type="submit"
+                                                    class="admin-focus inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold
+                                                    {{ $blog->status === 'published' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-slate-700 text-slate-200' }}"
+                                                    aria-label="{{ $blog->status === 'published' ? 'Unpublish' : 'Publish' }} {{ $blog->title }}">
+                                                    <span class="h-2 w-2 rounded-full {{ $blog->status === 'published' ? 'bg-emerald-300' : 'bg-slate-400' }}"></span>
+                                                    {{ $blog->status === 'published' ? 'Published' : 'Draft' }}
+                                                </button>
+                                            </form>
                                             <form method="POST" action="{{ route('admin.blogs.destroy', $blog) }}"
-                                                class="inline"
-                                                onsubmit="return confirm('Are you sure you want to delete this post?')">
+                                                data-confirm-message="Delete {{ $blog->title }}? This action cannot be undone.">
                                                 @csrf
                                                 @method('DELETE')
+                                                <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
                                                 <button type="submit"
-                                                    class="text-red-400 hover:text-red-300 transition-colors duration-300"
-                                                    title="Delete">
-                                                    <i class="fas fa-trash"></i>
+                                                    class="admin-focus inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-rose-400/15 bg-rose-500/10 text-rose-100 transition-colors duration-200 hover:bg-rose-500/20"
+                                                    aria-label="Delete {{ $blog->title }}">
+                                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
                                                 </button>
                                             </form>
                                         </div>
@@ -297,11 +320,15 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-12 text-center">
-                                        <div class="text-cyan-300/70">
-                                            <i class="fas fa-newspaper text-4xl mb-4"></i>
-                                            <p class="text-xl">No blog posts found</p>
-                                            <p class="text-sm mt-2">Create your first blog post to get started</p>
+                                    <td colspan="9" class="px-6 py-16 text-center">
+                                        <div class="mx-auto max-w-md">
+                                            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5 text-slate-300">
+                                                <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                                            </div>
+                                            <h3 class="admin-display mt-5 text-2xl font-bold text-white">No blog posts found</h3>
+                                            <p class="mt-2 text-sm leading-6 text-slate-400">
+                                                Adjust the filters or create a new blog post to populate this module.
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
@@ -309,216 +336,72 @@
                         </tbody>
                     </table>
                 </div>
+            </section>
+        </form>
 
-                <!-- Pagination -->
-                @if($blogs->hasPages())
-                    <div class="px-6 py-4 border-t border-white/10">
-                        {{ $blogs->appends(request()->query())->links('components.pagination') }}
-                    </div>
-                @endif
+        @if($blogs->hasPages())
+            <div class="pt-2">
+                {{ $blogs->links('components.pagination') }}
             </div>
-        </div>
+        @endif
     </div>
-
 @endsection
 
 @push('scripts')
     <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            initializeAnimations();
-            initializeBulkActions();
-
-            // Show success message if there's a flash message
-            @if(session('success'))
-                showMessage('{{ session('success') }}', 'success');
-            @endif
-
-            @if(session('error'))
-                showMessage('{{ session('error') }}', 'error');
-            @endif
-    });
-
-        function initializeAnimations() {
-            // Header animation
-            gsap.fromTo('.text-6xl', {
-                y: 100,
-                opacity: 0,
-                scale: 0.8
-            }, {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 1.5,
-                ease: "back.out(1.7)"
-            });
-
-            gsap.fromTo('.h-1', {
-                scaleX: 0
-            }, {
-                scaleX: 1,
-                duration: 1.5,
-                delay: 0.5,
-                ease: "power2.out"
-            });
-
-            // Action button animation
-            gsap.fromTo('a[href*="create"]', {
-                y: 50,
-                opacity: 0,
-                rotation: -5
-            }, {
-                y: 0,
-                opacity: 1,
-                rotation: 0,
-                duration: 1.2,
-                delay: 1,
-                ease: "elastic.out(1, 0.5)"
-            });
-
-            // Filters animation
-            gsap.fromTo('.backdrop-blur-xl', {
-                y: 50,
-                opacity: 0,
-                scale: 0.95
-            }, {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 1.2,
-                delay: 1.2,
-                ease: "power2.out"
-            });
-
-            // Table animation
-            gsap.fromTo('tbody tr', {
-                y: 30,
-                opacity: 0
-            }, {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                stagger: 0.05,
-                delay: 1.5,
-                ease: "power2.out"
-            });
-        }
-
-        function initializeBulkActions() {
-            const selectAll = document.getElementById('selectAll');
-            const checkboxes = document.querySelectorAll('.blog-checkbox');
+        document.addEventListener('DOMContentLoaded', () => {
+            const bulkForm = document.getElementById('blogBulkForm');
+            const selectAll = document.getElementById('selectAllBlogs');
+            const selectors = Array.from(document.querySelectorAll('.blog-selector'));
+            const selectedCount = document.getElementById('selectedBlogsCount');
             const bulkAction = document.getElementById('bulkAction');
             const bulkActionBtn = document.getElementById('bulkActionBtn');
-            const selectedCount = document.getElementById('selectedCount');
 
-            // Select all functionality
-            selectAll.addEventListener('change', function () {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-                updateBulkActionState();
-            });
+            const syncSelectionState = () => {
+                const checked = selectors.filter((checkbox) => checkbox.checked);
+                selectedCount.textContent = checked.length.toString();
+                bulkActionBtn.disabled = checked.length === 0 || !bulkAction.value;
 
-            // Individual checkbox functionality
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateBulkActionState);
-            });
-
-            // Bulk action change
-            bulkAction.addEventListener('change', function () {
-                bulkActionBtn.disabled = !this.value || getSelectedCount() === 0;
-            });
-
-            function updateBulkActionState() {
-                const count = getSelectedCount();
-                selectedCount.textContent = count;
-
-                // Update select all state
-                if (count === 0) {
-                    selectAll.indeterminate = false;
-                    selectAll.checked = false;
-                } else if (count === checkboxes.length) {
-                    selectAll.indeterminate = false;
-                    selectAll.checked = true;
-                } else {
-                    selectAll.indeterminate = true;
+                if (selectAll) {
+                    selectAll.checked = checked.length > 0 && checked.length === selectors.length;
+                    selectAll.indeterminate = checked.length > 0 && checked.length < selectors.length;
                 }
+            };
 
-                // Update bulk action button state
-                bulkActionBtn.disabled = !bulkAction.value || count === 0;
-            }
+            selectors.forEach((checkbox) => checkbox.addEventListener('change', syncSelectionState));
 
-            function getSelectedCount() {
-                return document.querySelectorAll('.blog-checkbox:checked').length;
-            }
-        }
+            if (selectAll) {
+                selectAll.addEventListener('change', () => {
+                    selectors.forEach((checkbox) => {
+                        checkbox.checked = selectAll.checked;
+                    });
 
-        function toggleStatus(blogId, currentStatus) {
-            fetch(`/admin/blogs/${blogId}/toggle-status`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                },
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showMessage(data.message, 'success');
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        showMessage('Failed to toggle status', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showMessage('An error occurred', 'error');
+                    syncSelectionState();
                 });
-        }
-
-        function showMessage(message, type = 'success') {
-            // Create message container if it doesn't exist
-            let container = document.getElementById('messageContainer');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'messageContainer';
-                container.className = 'fixed top-6 right-6 z-50';
-                document.body.appendChild(container);
             }
 
-            const messageClass = type === 'success'
-                ? 'backdrop-blur-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 text-green-300 px-8 py-4 rounded-2xl shadow-2xl flex items-center'
-                : 'backdrop-blur-xl bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-400/30 text-red-300 px-8 py-4 rounded-2xl shadow-2xl flex items-center';
+            if (bulkAction) {
+                bulkAction.addEventListener('change', syncSelectionState);
+            }
 
-            container.innerHTML = `
-            <div class="${messageClass}">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-3 text-${type === 'success' ? 'green' : 'red'}-400"></i>
-                <span class="font-semibold">${message}</span>
-            </div>
-        `;
+            document.addEventListener('submit', (event) => {
+                const form = event.target;
+                const message = form.getAttribute('data-confirm-message');
 
-            // Animate message appearance
-            gsap.fromTo(container, {
-                x: 100,
-                opacity: 0,
-                scale: 0.8
-            }, {
-                x: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                ease: "back.out(1.7)"
+                if (message && !window.confirm(message)) {
+                    event.preventDefault();
+                }
             });
 
-            setTimeout(() => {
-                gsap.to(container, {
-                    x: 100,
-                    opacity: 0,
-                    scale: 0.8,
-                    duration: 0.5,
-                    ease: "power2.in",
-                    onComplete: () => container.remove()
+            syncSelectionState();
+
+            if (bulkForm) {
+                bulkForm.addEventListener('submit', (event) => {
+                    if (bulkActionBtn.disabled) {
+                        event.preventDefault();
+                    }
                 });
-            }, 3000);
-        }
+            }
+        });
     </script>
 @endpush
